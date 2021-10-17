@@ -3,7 +3,7 @@ import { Request, Response } from '../types/route';
 import { IncomingMessage, ServerResponse } from 'http';
 import readBody from '../helpers/readBody';
 import { parse } from '../regex/url-to-regex';
-import createResponse from '../helpers/createResponse';
+import ResponseBuilder from '../response/responseBuilder';
 import processMiddleware from '../helpers/processMiddleware';
 
 export class Edno {
@@ -93,7 +93,7 @@ export class Edno {
                     for(let mid = 0; mid<middlewares.length; mid++){
                         await processMiddleware(middlewares[mid], overrideReq, res);
                     }
-                    const overrideRes = createResponse(<Response>res);
+                    const overrideRes = ResponseBuilder(<Response>res);
                     cb(req, overrideRes);
                     match = true;
                     break;

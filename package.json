@@ -1,6 +1,6 @@
 {
   "name": "edno-ts",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "node framework similar to express built in ts",
   "main": "src/edno",
   "scripts": {
@@ -24,7 +24,7 @@
     "prettier": "^2.4.1"
   },
   "devDependencies": {
-    "@types/node": "^16.11.0",
+    "@types/node": "^16.11.1",
     "ts-node": "^10.3.0",
     "typescript": "^4.4.4"
   }

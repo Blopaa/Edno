@@ -1,4 +1,8 @@
 ## edno-ts
+
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+
 express-like node framework built in typescript.
 
 ## How to install
@@ -46,7 +50,6 @@ before installing you must download [node](https://nodejs.org/es/)
   })
 ```
   
-  
 - Router parameters
 ```ts
     ednoApp.get('users/:name', (req: Request, res: Response) => {
@@ -84,3 +87,8 @@ feel free to help in the repository.
 ## License
 
 MIT
+
+[npm-url]: https://npmjs.org/package/edno-ts
+[npm-image]: https://img.shields.io/npm/v/edno-ts.svg
+[downloads-image]: https://img.shields.io/npm/dm/edno-ts.svg
+[downloads-url]: https://npmcharts.com/compare/edno-ts?minimal=true
