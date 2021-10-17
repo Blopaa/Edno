@@ -3,37 +3,78 @@ express-like node framework built in typescript.
 
 ## How to install
 
-- this is a node module, avaliable in npm.
-- before installing you must download [node](https://nodejs.org/es/)
+this is a node module, avaliable in npm.
 
+before installing you must download [node](https://nodejs.org/es/)
 
     npm install edno-ts
 
-## Examples
+## Features
 
-start an app:
-
-    const edno = new Edno();  
-	const ednoApp = edno.create(PORT);
-
-get method:
-
-    ednoApp.get(  
-    '/product/:id',  
+- Create routes supporting GET, POST, PUT, DELETE http verbs.
   
-    (req: Request, res: Response, next: () => void) => {  
-        // middleware code  
-	  next();  
-    },  
-    ({ body, params }: Request, res: Response) => {  
-        // service code  
-	  }	  
-	);
+```ts
+    ednoApp.get('<path>', (req: Request, res: Response) => {})
+    ednoApp.post('<path>', (req: Request, res: Response) => {})
+    ednoApp.put('<path>', (req: Request, res: Response) => {})
+    ednoApp.delete('<path>', (req: Request, res: Response) => {})
+```
 
-use Express middlewares if wanted such helmet, morgan, etc:
+- Reads posted body on JSON. 
+```ts
+    ednoApp.post('<path>', (req: Request, res: Response) => {
+        const body = req.body;
+    })
+```
+```ts
+    ednoApp.post('<path>', ({body}: Request, res: Response) => {})
+```
+  
+- you can add multiple middlewares that will run before the main service.
+```ts
+  ednoApp.get('<path>',
+  (req: Request, res: Response, next: () => void) => {
+        // middleware n1
+        next() // finish the middleware and move on to the next step *middleware n2*
+  },
+  (req: Request, res: Response, next: () => void) => {
+        // middleware n2
+        next() // finish the middleware and move on to the next step *main service*
+  },
+  (req: Request, res: Response) => {
+        // main service
+  })
+```
+  
+  
+- Router parameters
+```ts
+    ednoApp.get('users/:name', (req: Request, res: Response) => {
+        console.log(req.params) // for route /users/Blopa -> {name: Blopa}
+    })
+```
+- Express middlewares compatibility. ex: helmet, morgan...
+```ts
+    edno.use(helmet());
+    edno.use(morgan('dev'));
+```
+  
+## Create an app
 
-    edno.use(helmet());  
-	edno.use(morgan('dev'))
+```ts
+    const edno = new Edno();
+    
+    edno.use(morgan('dev'));    // express middlewares
+    edno.use(helmet());
+    
+    const ednoApp = edno.create(3000) // 3000 = PORT
+    
+    ednoApp.get('/products', (req: Request, res: Response) => {
+        // get all products
+    });
+    
+    // other methods post, put, get, etc.
+```
 
 ## Contributing
 

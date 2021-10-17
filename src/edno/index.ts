@@ -20,7 +20,8 @@ export class Edno {
         if (rest.length === 1) {
             this.registerRoutes(path, rest[0], method);
         } else {
-            this.registerRoutes(path, rest[1], method, rest[0]);
+            let service = rest.pop()
+            this.registerRoutes(path, service, method, rest);
         }
     }
 
@@ -28,7 +29,7 @@ export class Edno {
         path: string,
         cb: (req: Request, res: Response) => void,
         method: string,
-        middleware?: (req: Request, res: Response, next: any) => void
+        middleware?: Array<(req: Request, res: Response, next: () => void) => void>
     ) {
         if (!this.routeTable[path]) {
             this.routeTable[path] = {};
@@ -52,15 +53,19 @@ export class Edno {
 
     public create(port: number) {
         http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
-            this.beforeMiddleware.forEach((m) => {
-                m(<Request>req, <Response>res, (err: any) => {
-                    if (err) {
-                        res.statusCode = 500;
-                        res.end('internal error on edno.use middleware');
+            for (let y = 0; y < this.beforeMiddleware.length; y++) {
+                this.beforeMiddleware[y](
+                    <Request>req,
+                    <Response>res,
+                    (err: any) => {
+                        if (err) {
+                            res.statusCode = 500;
+                            res.end('internal error on edno.use middleware');
+                        }
+                        return;
                     }
-                    return;
-                });
-            });
+                );
+            }
             const overrideReq: Request = <Request>req;
             const routes = Object.keys(this.routeTable);
             let match = false;
@@ -77,16 +82,17 @@ export class Edno {
                         this.routeTable[route][
                             <string>overrideReq.method?.toLowerCase()
                         ];
-                    let middleware =
+                    let middlewares: Array<(req: Request, res: ServerResponse, next: () => void) => void> =
                         this.routeTable[route][
                             `${req.method?.toLowerCase()}-middleware`
                         ];
-
                     const m = overrideReq.url?.match(new RegExp(parsedRoute));
 
                     overrideReq.params = m ? m.groups : undefined;
                     overrideReq.body = await readBody(req);
-                    await processMiddleware(middleware, overrideReq, res);
+                    for(let mid = 0; mid<middlewares.length; mid++){
+                        await processMiddleware(middlewares[mid], overrideReq, res);
+                    }
                     const overrideRes = createResponse(<Response>res);
                     cb(req, overrideRes);
                     match = true;
