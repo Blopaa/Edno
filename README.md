@@ -50,7 +50,6 @@ before installing you must download [node](https://nodejs.org/es/)
   })
 ```
   
-  
 - Router parameters
 ```ts
     ednoApp.get('users/:name', (req: Request, res: Response) => {
