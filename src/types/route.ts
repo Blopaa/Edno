@@ -21,24 +21,8 @@ export class Request extends IncomingMessage {
     }
 }
 
-export class Response extends ServerResponse {
-    private _send: ((message: any) => void) | undefined;
-    private _json: ((message: { [key: string]: any } | undefined) => void) | undefined;
-
-
-    get send(): ((message: any) => void) | undefined {
-        return this._send;
-    }
-
-    set send(value: ((message: any) => void) | undefined) {
-        this._send = value;
-    }
-
-    get json(): ((message: ({ [p: string]: any } | undefined)) => void) | undefined {
-        return this._json;
-    }
-
-    set json(value: ((message: ({ [p: string]: any } | undefined)) => void) | undefined) {
-        this._json = value;
-    }
+export interface Response extends ServerResponse {
+    send: (message: string) => void;
+    json: (message: { [key: string]: any }) => void;
+    status: (status: number) => Omit<Response, 'status'>;
 }
