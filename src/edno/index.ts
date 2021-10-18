@@ -1,5 +1,5 @@
 import * as http from 'http';
-import { Request, Response } from '../types/route';
+import { Middleware, Request, Response } from '../types/route';
 import { IncomingMessage, ServerResponse } from 'http';
 import readBody from '../helpers/readBody';
 import { parse } from '../regex/url-to-regex';
@@ -8,19 +8,13 @@ import processMiddleware from '../helpers/processMiddleware';
 
 export class Edno {
     private routeTable: { [key: string]: any } = {};
-    private beforeMiddleware: Array<
-        (
-            req: IncomingMessage,
-            res: ServerResponse,
-            next: (err?: unknown) => void
-        ) => void
-    > = [];
+    private beforeMiddleware: Array<Middleware> = [];
 
     private methodFunction(method: string, path: string, ...rest: any[]) {
         if (rest.length === 1) {
             this.registerRoutes(path, rest[0], method);
         } else {
-            let service = rest.pop()
+            let service = rest.pop();
             this.registerRoutes(path, service, method, rest);
         }
     }
@@ -29,7 +23,7 @@ export class Edno {
         path: string,
         cb: (req: Request, res: Response) => void,
         method: string,
-        middleware?: Array<(req: Request, res: Response, next: () => void) => void>
+        middleware?: Array<Middleware>
     ) {
         if (!this.routeTable[path]) {
             this.routeTable[path] = {};
@@ -41,13 +35,7 @@ export class Edno {
         });
     }
 
-    public use(
-        cb: (
-            req: IncomingMessage,
-            res: ServerResponse,
-            next: (err?: unknown) => void
-        ) => void
-    ): void {
+    public use(cb: Middleware): void {
         this.beforeMiddleware.push(cb);
     }
 
@@ -57,7 +45,7 @@ export class Edno {
                 this.beforeMiddleware[y](
                     <Request>req,
                     <Response>res,
-                    (err: any) => {
+                    (err: unknown) => {
                         if (err) {
                             res.statusCode = 500;
                             res.end('internal error on edno.use middleware');
@@ -82,7 +70,7 @@ export class Edno {
                         this.routeTable[route][
                             <string>overrideReq.method?.toLowerCase()
                         ];
-                    let middlewares: Array<(req: Request, res: ServerResponse, next: () => void) => void> =
+                    let middlewares: Middleware[] =
                         this.routeTable[route][
                             `${req.method?.toLowerCase()}-middleware`
                         ];
@@ -90,8 +78,12 @@ export class Edno {
 
                     overrideReq.params = m ? m.groups : undefined;
                     overrideReq.body = await readBody(req);
-                    for(let mid = 0; mid<middlewares.length; mid++){
-                        await processMiddleware(middlewares[mid], overrideReq, res);
+                    for (let mid = 0; mid < middlewares.length; mid++) {
+                        await processMiddleware(
+                            middlewares[mid],
+                            overrideReq,
+                            ResponseBuilder(<Response>res)
+                        );
                     }
                     const overrideRes = ResponseBuilder(<Response>res);
                     cb(req, overrideRes);

@@ -21,6 +21,12 @@ export class Request extends IncomingMessage {
     }
 }
 
+export type Middleware = (
+    req: Request,
+    res: Response,
+    next: (err?: unknown) => void
+) => void;
+
 export interface Response extends ServerResponse {
     send: (message: string) => void;
     json: (message: { [key: string]: any }) => void;
