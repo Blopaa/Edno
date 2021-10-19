@@ -1,14 +1,34 @@
 import * as http from 'http';
-import { Middleware, Request, Response } from '../types/route';
+import { Middleware, Options, Request, Response } from "../types/route";
 import { IncomingMessage, ServerResponse } from 'http';
 import readBody from '../helpers/readBody';
 import { parse } from '../regex/url-to-regex';
 import ResponseBuilder from '../response/responseBuilder';
 import processMiddleware from '../helpers/processMiddleware';
+import { existsSync } from "fs";
+import { readDirRecursive } from "../helpers/readDirRecursive";
 
 export class Edno {
     private routeTable: { [key: string]: any } = {};
     private beforeMiddleware: Array<Middleware> = [];
+    constructor(private options: Options) {
+        (async () => {
+            await this.loadControllers()
+        })()
+    }
+
+    private path(path: string): string{
+      return this.options.root ? this.options.root.concat('/', path) : path
+    }
+
+    private async loadControllers(): Promise<void> {
+        const controllersPath: string = this.path('controllers')
+        if (!existsSync(controllersPath)) return;
+        const files = readDirRecursive(controllersPath);
+        for (let x = 0; x < files.length; x++) {
+            await import(files[x])
+        }
+    }
 
     private methodFunction(method: string, path: string, ...rest: any[]) {
         if (rest.length === 1) {
@@ -39,7 +59,7 @@ export class Edno {
         this.beforeMiddleware.push(cb);
     }
 
-    public create(port: number) {
+    private create(port: number) {
         http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
             for (let y = 0; y < this.beforeMiddleware.length; y++) {
                 this.beforeMiddleware[y](
@@ -111,5 +131,10 @@ export class Edno {
                 this.methodFunction('delete', path, ...rest);
             },
         };
+    }
+
+    public start(cb?: () => void): void{
+        cb ? cb() : undefined;
+        this.create(this.options.port);
     }
 }
