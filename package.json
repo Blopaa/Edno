@@ -1,12 +1,12 @@
 {
   "name": "edno-ts",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "node framework similar to express built in ts",
   "main": "src/edno",
   "scripts": {
     "build": "tsc"
   },
-  "keywords": [],
+  "keywords": ["app", "api", "framework", "edno", "node", "rest", "router", "web", "restful"],
   "author": "blopaa",
   "license": "MIT",
   "bugs": {
