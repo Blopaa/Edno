@@ -21,7 +21,7 @@ export class Request extends IncomingMessage {
     }
 }
 
-export type Middleware = (
+export type MiddlewareFunc = (
     req: Request,
     res: Response,
     next: (err?: unknown) => void

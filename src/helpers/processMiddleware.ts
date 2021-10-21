@@ -1,7 +1,6 @@
-import { Middleware, Request, Response } from "../types/route";
-import {ServerResponse} from "http";
+import { MiddlewareFunc, Request, Response } from "../types/route";
 
-export default function processMiddleware(middleware: Middleware, req: Request, res: Response){
+export default function processMiddleware(middleware: MiddlewareFunc, req: Request, res: Response){
     if(!middleware){
         //handling
         return new Promise((resolve) => resolve(true))
