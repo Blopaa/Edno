@@ -1,5 +1,5 @@
 import * as http from 'http';
-import { Middleware, Options, Request, Response } from '../types/route';
+import { MiddlewareFunc, Options, Request, Response } from '../types/route';
 import { IncomingMessage, ServerResponse } from 'http';
 import readBody from '../helpers/readBody';
 import { parse } from '../regex/url-to-regex';
@@ -8,10 +8,11 @@ import processMiddleware from '../helpers/processMiddleware';
 import { existsSync } from 'fs';
 import { readDirRecursive } from '../helpers/readDirRecursive';
 import controllerStore from '../stores/controllerStore';
+import middlewareStore from '../stores/MiddlewareStore';
 
 export class Edno {
     private routeTable: { [key: string]: any } = {};
-    private beforeMiddleware: Array<Middleware> = [];
+    private beforeMiddleware: Array<MiddlewareFunc> = [];
 
     constructor(private options: Options) {
         (async () => {
@@ -47,7 +48,7 @@ export class Edno {
         path: string,
         cb: (req: Request, res: Response) => void,
         method: string,
-        middleware?: Array<Middleware>
+        middleware?: Array<MiddlewareFunc>
     ) {
         if (!this.routeTable[path]) {
             this.routeTable[path] = {};
@@ -59,13 +60,19 @@ export class Edno {
         });
     }
 
-    public use(cb: Middleware): void {
+    public use(cb: MiddlewareFunc): void {
         this.beforeMiddleware.push(cb);
     }
 
     public configRoutes() {
         const controllers: string[] = [];
         for (const endpoint of controllerStore) {
+            const controllerMiddlewares =
+                middlewareStore.getMiddlewares(endpoint.controller) || [];
+            const endpointMiddlewares =
+                middlewareStore.getMiddlewares(
+                    `${endpoint.controller}-${endpoint.propertyKey}`
+                ) || [];
             const controller = controllerStore.getController(
                 endpoint.controller
             );
@@ -84,12 +91,15 @@ export class Edno {
             }`;
             let lastPath = path[path.length - 1];
             if (lastPath === '/') path = path.substring(1);
-            this.createRoute(
+            this.methodFunction(
                 endpoint.method.toLowerCase(),
                 path,
-                (controller.target as Record<string, () => unknown>)[
-                    endpoint.propertyKey
-                ].bind(controller.target)
+                ...controllerMiddlewares.concat(
+                    endpointMiddlewares,
+                    (controller.target as Record<string, () => unknown>)[
+                        endpoint.propertyKey
+                    ].bind(controller.target)
+                )
             );
         }
     }
@@ -125,7 +135,7 @@ export class Edno {
                         this.routeTable[route][
                             <string>overrideReq.method?.toLowerCase()
                         ];
-                    let middlewares: Middleware[] =
+                    let middlewares: MiddlewareFunc[] =
                         this.routeTable[route][
                             `${req.method?.toLowerCase()}-middleware`
                         ];
@@ -133,12 +143,12 @@ export class Edno {
 
                     overrideReq.params = m ? m.groups : undefined;
                     overrideReq.body = await readBody(req);
-                    if(middlewares){
+                    if (middlewares) {
                         for (let mid = 0; mid < middlewares.length; mid++) {
                             await processMiddleware(
-                              middlewares[mid],
-                              overrideReq,
-                              ResponseBuilder(<Response>res)
+                                middlewares[mid],
+                                overrideReq,
+                                ResponseBuilder(<Response>res)
                             );
                         }
                     }
@@ -153,10 +163,6 @@ export class Edno {
                 res.end('not found');
             }
         }).listen(port);
-    }
-
-    private createRoute(method: string, path: string, ...rest: any[]) {
-        this.methodFunction(method, path, ...rest);
     }
 
     public start(cb?: () => void): void {

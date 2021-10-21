@@ -68,6 +68,24 @@ public greetUser(req: Request, res: Response){
 }
 ```
 
+- Middlewares
+```ts
+/**
+ * Class Middleware decorator
+ * 
+ * Middleware structure -> (req: Request, rest: Response, next: () => void) => void
+ */
+@Contoler('<path>')
+@ControllerMiddleware(<Middleware array>)
+class x {
+  
+  @Get("<path>")
+  @Middleware(<Middleware array>)
+  public y (...){...}
+  
+}
+```
+
 ## Contributing
 
 feel free to help in the repository.
