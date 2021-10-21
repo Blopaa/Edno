@@ -8,3 +8,12 @@ export function ControllerMiddleware(
         middlewareStore.registerControllerMiddleware(middlewares, middleware);
     }) as ClassDecorator;
 }
+
+export function Middleware(middlewares: MiddlewareFunc[]): MethodDecorator {
+    return ((
+        target: any,
+        propertyKey: string | symbol
+    ) => {
+        middlewareStore.registerEndpointMiddleware(middlewares, propertyKey.toString(), target.constructor.name)
+    }) as MethodDecorator;
+}
