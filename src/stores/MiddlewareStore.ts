@@ -1,4 +1,4 @@
-import { MiddlewareFunc } from '../types/route';
+import { MiddlewareFunc } from "../types/route";
 
 class MiddlewareStore {
     private readonly _middlewares = new Map<String, MiddlewareFunc[]>();
@@ -15,7 +15,7 @@ class MiddlewareStore {
         propertyKey: string,
         controller: string
     ) {
-        this._middlewares.set(`${controller}-${propertyKey}`, middlewares)
+        this._middlewares.set(`${controller}-${propertyKey}`, middlewares);
     }
 
     public getMiddlewares(name: string): MiddlewareFunc[] | undefined {

@@ -1,4 +1,4 @@
-import { ControllerDef, EndpointDef } from '../types/route';
+import { ControllerDef, EndpointDef } from "../types/route";
 
 class ControllerStore implements Iterable<EndpointDef> {
     private readonly _list = new Map<string, ControllerDef>();
@@ -10,7 +10,7 @@ class ControllerStore implements Iterable<EndpointDef> {
     }
 
     public *[Symbol.iterator](): Iterator<EndpointDef> {
-        for(const endpoint of this.endpoints.values()){
+        for (const endpoint of this.endpoints.values()) {
             yield endpoint;
         }
     }
@@ -23,7 +23,7 @@ class ControllerStore implements Iterable<EndpointDef> {
         this._list.set(Controller.name, { path, target });
     }
 
-    public getController (controller: string): ControllerDef | undefined {
+    public getController(controller: string): ControllerDef | undefined {
         return this._list.get(controller);
     }
 }

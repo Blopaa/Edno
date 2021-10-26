@@ -1,14 +1,14 @@
-import * as http from 'http';
-import { MiddlewareFunc, Options, Request, Response } from '../types/route';
-import { IncomingMessage, ServerResponse } from 'http';
-import readBody from '../helpers/readBody';
-import { parse } from '../regex/url-to-regex';
-import ResponseBuilder from '../response/responseBuilder';
-import processMiddleware from '../helpers/processMiddleware';
-import { existsSync } from 'fs';
-import { readDirRecursive } from '../helpers/readDirRecursive';
-import controllerStore from '../stores/controllerStore';
-import middlewareStore from '../stores/MiddlewareStore';
+import * as http from "http";
+import { MiddlewareFunc, Options, Request, Response } from "../types/route";
+import { IncomingMessage, ServerResponse } from "http";
+import readBody from "../helpers/readBody";
+import { parse } from "../regex/url-to-regex";
+import ResponseBuilder from "../response/responseBuilder";
+import processMiddleware from "../helpers/processMiddleware";
+import { existsSync } from "fs";
+import { readDirRecursive } from "../helpers/readDirRecursive";
+import controllerStore from "../stores/controllerStore";
+import middlewareStore from "../stores/MiddlewareStore";
 
 export class Edno {
     private routeTable: { [key: string]: any } = {};
@@ -22,11 +22,11 @@ export class Edno {
     }
 
     private path(path: string): string {
-        return this.options.root ? this.options.root.concat('/', path) : path;
+        return this.options.root ? this.options.root.concat("/", path) : path;
     }
 
     private async loadControllers(): Promise<void> {
-        const controllersPath: string = this.path('controllers');
+        const controllersPath: string = this.path("controllers");
         if (!existsSync(controllersPath)) return;
         const files = readDirRecursive(controllersPath);
         for (let x = 0; x < files.length; x++) {
@@ -39,7 +39,7 @@ export class Edno {
         if (rest.length === 1) {
             this.registerRoutes(path, rest[0], method);
         } else {
-            let service = rest.pop();
+            const service = rest.pop();
             this.registerRoutes(path, service, method, rest);
         }
     }
@@ -56,7 +56,7 @@ export class Edno {
         return (this.routeTable[path] = {
             ...this.routeTable[path],
             [method]: cb,
-            [method + '-middleware']: middleware,
+            [method + "-middleware"]: middleware,
         });
     }
 
@@ -64,7 +64,7 @@ export class Edno {
         this.beforeMiddleware.push(cb);
     }
 
-    public configRoutes() {
+    public configRoutes(): void {
         const controllers: string[] = [];
         for (const endpoint of controllerStore) {
             const controllerMiddlewares =
@@ -82,15 +82,15 @@ export class Edno {
                 controllers.push(endpoint.controller);
             }
             let path = `${controller.path}${
-                controller.path.endsWith('/') && endpoint.path.startsWith('/')
+                controller.path.endsWith("/") && endpoint.path.startsWith("/")
                     ? endpoint.path.slice(1)
-                    : !endpoint.path.startsWith('/') &&
-                      !controller.path.endsWith('/')
-                    ? '/'.concat(endpoint.path)
-                    : endpoint.path
+                    : !endpoint.path.startsWith("/") &&
+                      !controller.path.endsWith("/")
+                        ? "/".concat(endpoint.path)
+                        : endpoint.path
             }`;
-            let lastPath = path[path.length - 1];
-            if (lastPath === '/') path = path.substring(1);
+            const lastPath = path[path.length - 1];
+            if (lastPath === "/") path = path.substring(1);
             this.methodFunction(
                 endpoint.method.toLowerCase(),
                 path,
@@ -113,7 +113,7 @@ export class Edno {
                     (err: unknown) => {
                         if (err) {
                             res.statusCode = 500;
-                            res.end('internal error on edno.use middleware');
+                            res.end("internal error on edno.use middleware");
                         }
                         return;
                     }
@@ -123,7 +123,7 @@ export class Edno {
             const routes = Object.keys(this.routeTable);
             let match = false;
             for (let i = 0; i < routes.length; i++) {
-                let route = routes[i];
+                const route = routes[i];
                 const parsedRoute = parse(route);
                 if (
                     new RegExp(parsedRoute).test(<string>overrideReq.url) &&
@@ -131,11 +131,11 @@ export class Edno {
                         <string>overrideReq.method?.toLowerCase()
                     ]
                 ) {
-                    let cb =
+                    const cb =
                         this.routeTable[route][
                             <string>overrideReq.method?.toLowerCase()
                         ];
-                    let middlewares: MiddlewareFunc[] =
+                    const middlewares: MiddlewareFunc[] =
                         this.routeTable[route][
                             `${req.method?.toLowerCase()}-middleware`
                         ];
@@ -160,7 +160,7 @@ export class Edno {
             }
             if (!match) {
                 res.statusCode = 404;
-                res.end('not found');
+                res.end("not found");
             }
         }).listen(port);
     }

@@ -1,11 +1,11 @@
 export function parse(url: string): string {
-    let str = '';
+    let str = "";
 
-    for (let i: number = 0; i < url.length; i++) {
+    for (let i = 0; i < url.length; i++) {
         const c: string = url.charAt(i);
-        if (c === ':') {
+        if (c === ":") {
             let j: number;
-            let param: string = '';
+            let param = "";
             for (j = i + 1; j < url.length; j++) {
                 if (/\w/.test(url.charAt(j))) {
                     param += url.charAt(j);

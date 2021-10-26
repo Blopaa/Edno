@@ -1,5 +1,5 @@
-import { MiddlewareFunc } from '../types/route';
-import middlewareStore from '../stores/MiddlewareStore';
+import { MiddlewareFunc } from "../types/route";
+import middlewareStore from "../stores/MiddlewareStore";
 
 export function ControllerMiddleware(
     middlewares: MiddlewareFunc[]
@@ -10,10 +10,11 @@ export function ControllerMiddleware(
 }
 
 export function Middleware(middlewares: MiddlewareFunc[]): MethodDecorator {
-    return ((
-        target: any,
-        propertyKey: string | symbol
-    ) => {
-        middlewareStore.registerEndpointMiddleware(middlewares, propertyKey.toString(), target.constructor.name)
+    return ((target: any, propertyKey: string | symbol) => {
+        middlewareStore.registerEndpointMiddleware(
+            middlewares,
+            propertyKey.toString(),
+            target.constructor.name
+        );
     }) as MethodDecorator;
 }

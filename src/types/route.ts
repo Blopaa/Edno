@@ -1,4 +1,4 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage, ServerResponse } from "http";
 
 export class Request extends IncomingMessage {
     private _params: { [key: string]: any } | undefined;
@@ -43,13 +43,13 @@ export enum Methods {
     Get = "GET",
     Post = "POST",
     Put = "PUT",
-    Delete = "DELETE"
+    Delete = "DELETE",
 }
 
 export interface Response extends ServerResponse {
     send: (message: string) => void;
     json: (message: { [key: string]: any }) => void;
-    status: (status: number) => Omit<Response, 'status'>;
+    status: (status: number) => Omit<Response, "status">;
 }
 
 export interface Options {
