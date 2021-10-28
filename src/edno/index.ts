@@ -1,5 +1,5 @@
 import * as http from "http";
-import { MiddlewareFunc, Options, Request, Response } from "../types/route";
+import { ErrorHandlerDef, MiddlewareFunc, Options, Request, Response } from "../types/route";
 import { IncomingMessage, ServerResponse } from "http";
 import readBody from "../helpers/readBody";
 import { parse } from "../regex/url-to-regex";
@@ -9,6 +9,8 @@ import { existsSync } from "fs";
 import { readDirRecursive } from "../helpers/readDirRecursive";
 import controllerStore from "../stores/controllerStore";
 import middlewareStore from "../stores/MiddlewareStore";
+import { HttpException } from "../utils/HttpException";
+import errorHandlerStore from "../stores/ErrorHandlerStore";
 
 export class Edno {
     private routeTable: { [key: string]: any } = {};
@@ -17,6 +19,7 @@ export class Edno {
     constructor(private options: Options) {
         (async () => {
             await this.loadControllers();
+            await this.loadErrorHandler();
             this.configRoutes();
         })();
     }
@@ -25,13 +28,25 @@ export class Edno {
         return this.options.root ? this.options.root.concat("/", path) : path;
     }
 
+    private async loadErrorHandler(){
+        const exceptionHandlerPath = this.options.exceptionPath;
+        if(!existsSync(exceptionHandlerPath)) return;
+        const files = readDirRecursive(exceptionHandlerPath);
+        await Edno.dynamicImport(files);
+        console.info(`loaded ${files.length} errorHandlers`);
+    }
+
+    private static async dynamicImport(files: string[]): Promise<void> {
+        for (let x = 0; x < files.length; x++) {
+            await import(files[x]);
+        }
+    }
+
     private async loadControllers(): Promise<void> {
         const controllersPath: string = this.path("controllers");
         if (!existsSync(controllersPath)) return;
         const files = readDirRecursive(controllersPath);
-        for (let x = 0; x < files.length; x++) {
-            await import(files[x]);
-        }
+        await Edno.dynamicImport(files);
         console.info(`loaded ${files.length} controllers`);
     }
 
@@ -104,6 +119,10 @@ export class Edno {
         }
     }
 
+    private checkExceptionHandler (exception: HttpException): ErrorHandlerDef | undefined {
+        return errorHandlerStore.getErrorHandler(exception.constructor.name);
+    }
+
     private create(port: number) {
         http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
             for (let y = 0; y < this.beforeMiddleware.length; y++) {
@@ -143,17 +162,34 @@ export class Edno {
 
                     overrideReq.params = m ? m.groups : undefined;
                     overrideReq.body = await readBody(req);
-                    if (middlewares) {
-                        for (let mid = 0; mid < middlewares.length; mid++) {
-                            await processMiddleware(
-                                middlewares[mid],
-                                overrideReq,
-                                ResponseBuilder(<Response>res)
-                            );
-                        }
-                    }
                     const overrideRes = ResponseBuilder(<Response>res);
-                    cb(req, overrideRes);
+                    try {
+                        if (middlewares) {
+                            for (let mid = 0; mid < middlewares.length; mid++) {
+                                await processMiddleware(
+                                    middlewares[mid],
+                                    overrideReq,
+                                    ResponseBuilder(<Response>res)
+                                );
+                            }
+                        }
+                        cb(req, overrideRes);
+                    } catch (error: unknown) {
+                        const errorHandler = this.checkExceptionHandler(
+                            error as HttpException
+                        );
+                        if (!errorHandler) {
+                            overrideRes.json(error as HttpException);
+                            return;
+                        }
+                        const handler = errorHandler.handler(
+                            overrideRes,
+                            (error as HttpException).message
+                        );
+                        overrideRes
+                            .status((error as HttpException).status)
+                            .json(handler as Record<string, any>);
+                    }
                     match = true;
                     break;
                 }

@@ -39,6 +39,13 @@ export interface EndpointDef {
     controller: string;
 }
 
+export interface ErrorHandlerDef {
+    target: string;
+    handler: (res: Response, message: string | Record<string, any>) => unknown;
+    propertyKey: string;
+    exceptionHandled: string
+}
+
 export enum Methods {
     Get = "GET",
     Post = "POST",
@@ -54,5 +61,6 @@ export interface Response extends ServerResponse {
 
 export interface Options {
     port: number;
-    root?: string;
+    root: string;
+    exceptionPath: string;
 }
