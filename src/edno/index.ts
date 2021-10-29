@@ -183,7 +183,6 @@ export class Edno {
                             return;
                         }
                         const handler = errorHandler.handler(
-                            overrideRes,
                             (error as HttpException).message
                         );
                         overrideRes

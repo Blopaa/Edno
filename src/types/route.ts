@@ -41,7 +41,7 @@ export interface EndpointDef {
 
 export interface ErrorHandlerDef {
     target: string;
-    handler: (res: Response, message: string | Record<string, any>) => unknown;
+    handler: (message: string | Record<string, any>) => unknown;
     propertyKey: string;
     exceptionHandled: string
 }

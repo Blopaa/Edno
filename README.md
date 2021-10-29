@@ -86,6 +86,58 @@ class x {
 }
 ```
 
+## Error Handling
+
+- Create your own exceptions
+
+```ts
+
+/**
+ * you can create your own exceptions by extending the HttpException class,
+ * in the super() you must pass as the first parameter a number,
+ * the status, and the message to be sent, which can be an object or a string.
+ */
+
+class CustomException extends HttpException {
+  constructor(private status: number, private message: string | Record<string, any>) {
+    super(status, message);
+  }
+}
+```
+
+- Catch exceptions
+
+```ts
+
+/**
+ * throw the exception at the endpoint
+ */
+
+@Controller(...)
+class controller {
+  @Get(...)
+  public endpoint (){
+    throw new Exception();
+  }
+}
+
+/**
+ * in the decorator you put the class you want to be intercepted when you throw it,
+ * the method it will be executed only if the exception is thrown,
+ * in the method you receive the exception thrown example: 
+ * throw new Exception("something happened")
+ * -> you will receive this exception as a parameter, with message "something happened", etc.
+ * 
+ */
+
+class ExceptionHandler {
+  @ErrorHandler(Exception)
+  public handlerException (exception: Exception){
+    return // new response will be sent to client in the event of the handled exception
+  }
+}
+```
+
 ## Contributing
 
 feel free to help in the repository.
