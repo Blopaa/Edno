@@ -43,7 +43,7 @@ export interface ErrorHandlerDef {
     target: string;
     handler: (message: string | Record<string, any>) => unknown;
     propertyKey: string;
-    exceptionHandled: string
+    exceptionHandled: string;
 }
 
 export enum Methods {
@@ -62,5 +62,6 @@ export interface Response extends ServerResponse {
 export interface Options {
     port: number;
     root: string;
-    exceptionPath: string;
+    exceptionPath?: string;
+    middlewares?: MiddlewareFunc[];
 }

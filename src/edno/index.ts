@@ -1,5 +1,5 @@
 import * as http from "http";
-import { ErrorHandlerDef, MiddlewareFunc, Options, Request, Response } from "../types/route";
+import { MiddlewareFunc, Options, Request, Response } from "../types/route";
 import { IncomingMessage, ServerResponse } from "http";
 import readBody from "../helpers/readBody";
 import { parse } from "../regex/url-to-regex";
@@ -17,6 +17,11 @@ export class Edno {
     private beforeMiddleware: Array<MiddlewareFunc> = [];
 
     constructor(private options: Options) {
+        if (options.middlewares) {
+            options.middlewares.forEach((middleware) => {
+                this.use(middleware);
+            });
+        }
         (async () => {
             await this.loadControllers();
             await this.loadErrorHandler();
@@ -28,9 +33,10 @@ export class Edno {
         return this.options.root ? this.options.root.concat("/", path) : path;
     }
 
-    private async loadErrorHandler(){
+    private async loadErrorHandler() {
         const exceptionHandlerPath = this.options.exceptionPath;
-        if(!existsSync(exceptionHandlerPath)) return;
+        if (!exceptionHandlerPath) return;
+        if (!existsSync(exceptionHandlerPath)) return;
         const files = readDirRecursive(exceptionHandlerPath);
         await Edno.dynamicImport(files);
         console.info(`loaded ${files.length} errorHandlers`);
@@ -75,7 +81,7 @@ export class Edno {
         });
     }
 
-    public use(cb: MiddlewareFunc): void {
+    private use(cb: MiddlewareFunc): void {
         this.beforeMiddleware.push(cb);
     }
 
@@ -117,10 +123,6 @@ export class Edno {
                 )
             );
         }
-    }
-
-    private checkExceptionHandler (exception: HttpException): ErrorHandlerDef | undefined {
-        return errorHandlerStore.getErrorHandler(exception.constructor.name);
     }
 
     private create(port: number) {
@@ -175,8 +177,8 @@ export class Edno {
                         }
                         cb(req, overrideRes);
                     } catch (error: unknown) {
-                        const errorHandler = this.checkExceptionHandler(
-                            error as HttpException
+                        const errorHandler = errorHandlerStore.getErrorHandler(
+                            (error as HttpException).constructor.name
                         );
                         if (!errorHandler) {
                             overrideRes.json(error as HttpException);

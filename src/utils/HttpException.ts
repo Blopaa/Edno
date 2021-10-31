@@ -31,5 +31,4 @@ export class HttpException extends Error {
                 ?.join(" ") || "";
         }
     }
-
 }
