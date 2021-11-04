@@ -27,6 +27,8 @@ export type MiddlewareFunc = (
     next: (err?: unknown) => void
 ) => void;
 
+export type EndpointFunc = (req: Request, res: Response) => void;
+
 export interface ControllerDef {
     path: string;
     target: unknown;
@@ -51,6 +53,12 @@ export enum Methods {
     Post = "POST",
     Put = "PUT",
     Delete = "DELETE",
+}
+
+export interface ConfiguredRoute {
+    method: string;
+    path: string;
+    functions: Array<EndpointFunc | MiddlewareFunc>;
 }
 
 export interface Response extends ServerResponse {
