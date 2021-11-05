@@ -4,10 +4,7 @@ class ErrorHandlerStore {
     private readonly errorHandlers = new Map<string, ErrorHandlerDef>();
 
     public registerErrorHandler(exceptionClass: ErrorHandlerDef) {
-        this.errorHandlers.set(
-            exceptionClass.exceptionHandled,
-            exceptionClass
-        );
+        this.errorHandlers.set(exceptionClass.exceptionHandled, exceptionClass);
     }
 
     public getErrorHandler(errorHandler: string): ErrorHandlerDef | undefined {
