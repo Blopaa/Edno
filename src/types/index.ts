@@ -61,6 +61,19 @@ export interface ConfiguredRoute {
     functions: Array<EndpointFunc | MiddlewareFunc>;
 }
 
+export interface Injector {
+    toInject: string;
+    target: new () => unknown;
+    index: number
+}
+
+export interface Injectable {
+    controller: string;
+    target: new () => unknown;
+}
+
+export type unknownClass = new (...args: any[]) => unknown;
+
 export interface Response extends ServerResponse {
     send: (message: string) => void;
     json: (message: { [key: string]: any }) => void;

@@ -1,4 +1,4 @@
-import { MiddlewareFunc } from "../types/route";
+import { MiddlewareFunc } from "../types";
 
 class MiddlewareStore {
     private readonly _middlewares = new Map<String, MiddlewareFunc[]>();

@@ -1,4 +1,4 @@
-import { ErrorHandlerDef } from "../types/route";
+import { ErrorHandlerDef } from "../types";
 
 class ErrorHandlerStore {
     private readonly errorHandlers = new Map<string, ErrorHandlerDef>();

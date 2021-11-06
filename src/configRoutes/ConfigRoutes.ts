@@ -1,6 +1,6 @@
 import controllerStore from "../stores/controllerStore";
 import middlewareStore from "../stores/MiddlewareStore";
-import { ConfiguredRoute } from "../types/route";
+import { ConfiguredRoute } from "../types";
 
 export class ConfigRoutes {
     public configRoutes(): ConfiguredRoute[] {

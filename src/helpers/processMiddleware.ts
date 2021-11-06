@@ -1,4 +1,4 @@
-import { MiddlewareFunc, Request, Response } from "../types/route";
+import { MiddlewareFunc, Request, Response } from "../types";
 
 export default function processMiddleware(
     middleware: MiddlewareFunc,
