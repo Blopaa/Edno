@@ -3,7 +3,7 @@ import {
     EndpointFunc,
     MiddlewareFunc,
     Options,
-} from "../types/route";
+} from "../types";
 import { ConfigRoutes } from "../configRoutes/ConfigRoutes";
 import { Loaders } from "../loaders";
 import { Router } from "../router";
@@ -19,11 +19,12 @@ export class Edno {
 
     private async initialise() {
         if (this.options.middlewares) {
-            this.options.middlewares.forEach((middleware) => {
-                this.use(middleware);
+            this.options.middlewares.forEach((middleware: MiddlewareFunc) => {
+                this.router.beforeMiddleware.push(middleware);
             });
         }
         const loaders = new Loaders(this.options);
+        await loaders.loadComponents();
         await loaders.loadControllers();
         await loaders.loadErrorHandler();
         // prettier-ignore
@@ -44,10 +45,6 @@ export class Edno {
             const service = rest.pop() as EndpointFunc;
             this.router.registerRoutes(path, service, method, rest);
         }
-    }
-
-    private use(cb: MiddlewareFunc): void {
-        this.router.beforeMiddleware.push(cb);
     }
 
     public start(cb?: () => void): void {

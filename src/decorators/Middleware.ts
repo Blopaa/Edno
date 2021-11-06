@@ -1,4 +1,4 @@
-import { MiddlewareFunc } from "../types/route";
+import { MiddlewareFunc } from "../types";
 import middlewareStore from "../stores/MiddlewareStore";
 
 export function ControllerMiddleware(

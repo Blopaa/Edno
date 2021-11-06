@@ -1,6 +1,6 @@
 import { existsSync } from "fs";
 import { readDirRecursive } from "../helpers/readDirRecursive";
-import { Options } from "../types/route";
+import { Options } from "../types";
 
 export class Loaders {
 
@@ -33,5 +33,13 @@ export class Loaders {
         const files = readDirRecursive(controllersPath);
         await Loaders.dynamicImport(files);
         console.info(`loaded ${files.length} controllers`);
+    }
+
+    public async loadComponents(): Promise<void> {
+        const controllersPath: string = this.path("components");
+        if (!existsSync(controllersPath)) return;
+        const files = readDirRecursive(controllersPath);
+        await Loaders.dynamicImport(files);
+        console.info(`loaded ${files.length} components`);
     }
 }

@@ -4,7 +4,7 @@ import {
     MiddlewareFunc,
     Request,
     Response,
-} from "../types/route";
+} from "../types";
 import { parse } from "../regex/url-to-regex";
 import readBody from "../helpers/readBody";
 import ResponseBuilder from "../response/responseBuilder";

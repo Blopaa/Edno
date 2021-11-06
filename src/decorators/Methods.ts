@@ -1,5 +1,5 @@
 import controllerStore from "../stores/controllerStore";
-import { Methods } from "../types/route";
+import { Methods } from "../types";
 
 export function Get(path: string): MethodDecorator {
     return (target: any, propertyKey: string | symbol): void => {
