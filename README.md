@@ -138,6 +138,39 @@ class ExceptionHandler {
 }
 ```
 
+## Injection 
+dependency injection can be performed using 2 decorators
+
+- Component
+
+  @Component will mark the decorated class as injectable,
+  without the class being decorated, it will not be possible to inject the class.
+```ts
+@Component()
+class Greet {
+  public greet(){
+    console.log("HI")
+  }
+}
+```
+
+- Inject
+
+    @Inject will inject
+the class sent as a parameter whenever it is a component (decorated with @Component) 
+and @Inject is inside the constructor.
+
+```ts
+@Controller(...)
+class X {
+  
+  constructor(
+    @Inject(Greet) private greet: Greet
+  ) {}
+  
+}
+```
+
 ## Contributing
 
 feel free to help in the repository.
