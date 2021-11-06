@@ -1,4 +1,5 @@
-import { ControllerDef, EndpointDef } from "../types/route";
+import { ControllerDef, EndpointDef } from "../types";
+import injectorStore from "./InjectorStore";
 
 class ControllerStore implements Iterable<EndpointDef> {
     private readonly _list = new Map<string, ControllerDef>();
@@ -19,7 +20,11 @@ class ControllerStore implements Iterable<EndpointDef> {
         path: string,
         Controller: new (...args: unknown[]) => unknown
     ) {
-        const target = new Controller([]);
+        const injectors = injectorStore.getInjector(Controller.name);
+        const sortedInjectors = injectors
+            .sort((a, b) => a.index - b.index)
+            .map((i) => injectorStore.getInjectable(i.toInject));
+        const target = new Controller(...sortedInjectors);
         this._list.set(Controller.name, { path, target });
     }
 
