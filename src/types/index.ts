@@ -64,7 +64,7 @@ export interface ConfiguredRoute {
 export interface Injector {
     toInject: string;
     target: new () => unknown;
-    index: number
+    index: number;
 }
 
 export interface Injectable {
@@ -83,6 +83,15 @@ export interface Response extends ServerResponse {
 export interface Options {
     port: number;
     root: string;
-    exceptionPath?: string;
     middlewares?: MiddlewareFunc[];
+    paths?: {
+        exception?: string;
+        controller?: string;
+        component?: string;
+    };
+}
+
+export interface IFile {
+    name: string;
+    ext: string;
 }
