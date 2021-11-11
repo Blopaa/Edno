@@ -1,9 +1,7 @@
-import { existsSync } from "fs";
-import { readDirRecursive } from "../helpers/readDirRecursive";
 import { Options } from "../types";
+import { abstractPathTranslator } from "../helpers/abstractPathTranslator";
 
 export class Loaders {
-
     constructor(private options: Options) {
         this.options = options;
     }
@@ -13,10 +11,10 @@ export class Loaders {
     }
 
     public async loadErrorHandler(): Promise<void> {
-        const exceptionHandlerPath = this.options.exceptionPath;
-        if (!exceptionHandlerPath) return;
-        if (!existsSync(exceptionHandlerPath)) return;
-        const files = readDirRecursive(exceptionHandlerPath);
+        const exceptionHandlerPath = this.path(
+            this.options.paths?.exception || "exceptions"
+        );
+        const files: string[] = abstractPathTranslator(exceptionHandlerPath);
         await Loaders.dynamicImport(files);
         console.info(`loaded ${files.length} errorHandlers`);
     }
@@ -28,17 +26,19 @@ export class Loaders {
     }
 
     public async loadControllers(): Promise<void> {
-        const controllersPath: string = this.path("controllers");
-        if (!existsSync(controllersPath)) return;
-        const files = readDirRecursive(controllersPath);
+        const controllersPath: string = this.path(
+            this.options.paths?.controller || "controllers"
+        );
+        const files: string[] = abstractPathTranslator(controllersPath);
         await Loaders.dynamicImport(files);
         console.info(`loaded ${files.length} controllers`);
     }
 
     public async loadComponents(): Promise<void> {
-        const controllersPath: string = this.path("components");
-        if (!existsSync(controllersPath)) return;
-        const files = readDirRecursive(controllersPath);
+        const componentsPath: string = this.path(
+            this.options.paths?.component || "components"
+        );
+        const files: string[] = abstractPathTranslator(componentsPath);
         await Loaders.dynamicImport(files);
         console.info(`loaded ${files.length} components`);
     }

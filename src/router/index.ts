@@ -1,10 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from "http";
-import {
-    EndpointFunc,
-    MiddlewareFunc,
-    Request,
-    Response,
-} from "../types";
+import { EndpointFunc, MiddlewareFunc, Request, Response } from "../types";
 import { parse } from "../regex/url-to-regex";
 import readBody from "../helpers/readBody";
 import ResponseBuilder from "../response/responseBuilder";

@@ -8,11 +8,11 @@ export class ConfigRoutes {
         const routes: ConfiguredRoute[] = [];
         for (const endpoint of controllerStore) {
             const controllerMiddlewares =
-        middlewareStore.getMiddlewares(endpoint.controller) || [];
+                middlewareStore.getMiddlewares(endpoint.controller) || [];
             const endpointMiddlewares =
-        middlewareStore.getMiddlewares(
-            `${endpoint.controller}-${endpoint.propertyKey}`
-        ) || [];
+                middlewareStore.getMiddlewares(
+                    `${endpoint.controller}-${endpoint.propertyKey}`
+                ) || [];
             const controller = controllerStore.getController(
                 endpoint.controller
             );
@@ -25,7 +25,7 @@ export class ConfigRoutes {
                 controller.path.endsWith("/") && endpoint.path.startsWith("/")
                     ? endpoint.path.slice(1)
                     : !endpoint.path.startsWith("/") &&
-          !controller.path.endsWith("/")
+                      !controller.path.endsWith("/")
                         ? "/".concat(endpoint.path)
                         : endpoint.path
             }`;
@@ -39,7 +39,7 @@ export class ConfigRoutes {
                     (controller.target as Record<string, () => unknown>)[
                         endpoint.propertyKey
                     ].bind(controller.target)
-                )
+                ),
             });
         }
 

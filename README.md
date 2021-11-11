@@ -15,21 +15,38 @@ before installing you must download [node](https://nodejs.org/es/)
 
 ## Features
 - Start an app
+
 ```ts
-/* 
-port - on which port the application will be running
-ROOT - project base folder   
+
+/**
+ * example: 
+ * 
+ * @example const options = {
+ *   port: 3000,
+ *   root: __dirname,
+ *   middlewares: [morgan("dev"), helmet()]
+ *   paths: {
+ *     exceptions: "\exceptions\handlers",
+ *     controller: "\**\controllers\*.ts",
+ *     component: "\components\*.ts"
+ *   }
+ * }
  */
-const edno = new Edno({PORT, ROOT});
+const options: Options = {
+  port: number,
+  root: string,
+  middlewares?: MiddlewareFunc[],
+  paths?: {
+    exception?: string,
+    controller?: string,
+    component?: string,
+  }
+}
+
+const edno = new Edno(options);
 const ednoApp = edno.start(() => {
   console.log(`server on port ${PORT}`)
 })
-
-/*
-* for now the structure of the framework is not very flexible so in the ROOT,
-*  all the drivers must be in a folder called controllers,
-*  inside it can be inside other folders without problems
-* */
 ```
 - Define the base path of your controllers
 ```ts
