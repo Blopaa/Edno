@@ -28,7 +28,7 @@ export function abstractPathTranslator(path: string): string[] {
                 }
             });
         }
-    } else if (base.includes("**")) {
+    } else if (splatted.length>1) {
         const list: string[] = readdirSync(base);
         list.forEach((f) => {
             const filePath: string = Path.join(base, f);
