@@ -1,5 +1,10 @@
 import injectorStore from "../stores/InjectorStore";
 
+/**
+ * record where to inject with the given class
+ *
+ * @param injectable
+ */
 export function Inject(injectable: new () => unknown): ParameterDecorator {
     return (
         target: any,

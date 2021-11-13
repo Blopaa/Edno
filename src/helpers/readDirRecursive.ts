@@ -7,7 +7,7 @@ import path from "path";
  */
 export function readDirRecursive(dir: string): string[] {
     const files: string[] = [];
-    if(existsSync(dir)){
+    if (existsSync(dir)) {
         const list = readdirSync(dir);
         for (let x = 0; x < list.length; x++) {
             const filePath = path.join(dir, list[x]);

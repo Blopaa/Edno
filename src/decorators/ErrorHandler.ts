@@ -1,6 +1,11 @@
 import errorHandlerStore from "../stores/ErrorHandlerStore";
 import { HttpException } from "../utils/HttpException";
 
+/**
+ * record new errorHandler for given exception.
+ *
+ * @param exceptionClass
+ */
 export function ErrorHandler(
     exceptionClass: new (...args: any[]) => HttpException
 ): MethodDecorator {

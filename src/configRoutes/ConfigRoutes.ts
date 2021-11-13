@@ -3,6 +3,10 @@ import middlewareStore from "../stores/MiddlewareStore";
 import { ConfiguredRoute } from "../types";
 
 export class ConfigRoutes {
+    /**
+     * will mix controller + endpoint to adapt routes to router handler
+     * @return {Array<ConfiguredRoute>>} adapted routes.
+     */
     public configRoutes(): ConfiguredRoute[] {
         const controllers: string[] = [];
         const routes: ConfiguredRoute[] = [];
@@ -26,8 +30,8 @@ export class ConfigRoutes {
                     ? endpoint.path.slice(1)
                     : !endpoint.path.startsWith("/") &&
                       !controller.path.endsWith("/")
-                        ? "/".concat(endpoint.path)
-                        : endpoint.path
+                    ? "/".concat(endpoint.path)
+                    : endpoint.path
             }`;
             const lastPath = path[path.length - 1];
             if (lastPath === "/") path = path.substring(1);
