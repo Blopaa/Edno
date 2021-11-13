@@ -1,6 +1,6 @@
 import { IncomingMessage } from "http";
 
-export default function readBody(req: IncomingMessage): Promise<String> {
+export default function readBody(req: IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
         let body = "";
         req.on("data", (c) => {
