@@ -65,7 +65,9 @@ export class Router {
                     const m = overrideReq.url?.match(new RegExp(parsedRoute));
 
                     overrideReq.params = m?.groups as Record<string, any>;
-                    overrideReq.body = JSON.parse((await readBody(req)) || "[]");
+                    overrideReq.body = JSON.parse(
+                        (await readBody(req)) || "[]"
+                    );
                     const overrideRes = ResponseBuilder(<Response>res);
                     try {
                         if (middlewares) {
