@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "prettier": "prettier -w src/",
-    "eslint": "eslint src/ --fix"
+    "lint": "eslint src/ --fix"
   },
   "keywords": [
     "app",
