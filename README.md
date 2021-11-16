@@ -191,7 +191,7 @@ class X {
 ## Contributing
 
 feel free to help in the repository.
-[Contributing Guide](https://github.com/Blopaa/Edno#CONTRIBUTING.md)
+[Contributing Guide](https://github.com/Blopaa/Edno/blob/dev/CONTRIBUTING.md)
 
 ## License
 
