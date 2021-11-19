@@ -48,7 +48,9 @@ export class Edno {
     }
 
     public start(cb?: () => void): void {
-        cb ? cb() : undefined;
+        if(cb){
+            cb()
+        }
         this.router.create(this.options.port);
     }
 }

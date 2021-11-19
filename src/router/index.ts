@@ -79,7 +79,7 @@ export class Router {
                                 );
                             }
                         }
-                        cb(req, overrideRes);
+                        await cb(req, overrideRes);
                     } catch (error: unknown) {
                         const errorHandler = errorHandlerStore.getErrorHandler(
                             (error as HttpException).constructor.name
@@ -89,7 +89,7 @@ export class Router {
                             return;
                         }
                         const handler = errorHandler.handler(
-                            (error as HttpException).message
+                            (error as HttpException)
                         );
                         overrideRes
                             .status((error as HttpException).status)

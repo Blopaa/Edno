@@ -1,6 +1,6 @@
 {
   "name": "edno-ts",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "fast and simple node framework with poo and decorators made with pure node",
   "main": "src/edno",
   "scripts": {
@@ -37,13 +37,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "^16.11.7",
+    "@types/node": "^16.11.9",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.11.0",
     "prettier": "^2.4.1",
     "ts-node": "^10.4.0",
-    "typescript": "^4.4.4"
+    "typescript": "^4.5.2"
   }
 }
