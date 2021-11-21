@@ -1,5 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from "http";
-import { EndpointFunc, MiddlewareFunc, Request, Response } from "../types";
+import { EndpointFunc, HeaderDef, MiddlewareFunc, Request, Response } from "../types";
 import { parse } from "../regex/url-to-regex";
 import readBody from "../helpers/readBody";
 import ResponseBuilder from "../response/responseBuilder";
@@ -15,6 +15,7 @@ export class Router {
         path: string,
         cb: EndpointFunc,
         method: string,
+        headers: HeaderDef[],
         middleware?: Array<MiddlewareFunc>
     ): void {
         if (!this._routeTable[path]) {
@@ -23,6 +24,7 @@ export class Router {
         this._routeTable[path] = {
             ...this._routeTable[path],
             [method]: cb,
+            [method + "-headers"]: headers,
             [method + "-middleware"]: middleware,
         };
     }
@@ -54,6 +56,7 @@ export class Router {
                         <string>overrideReq.method?.toLowerCase()
                     ]
                 ) {
+                    const headers: HeaderDef[] = this._routeTable[route][`${req.method?.toLowerCase()}-headers`];
                     const cb =
                         this._routeTable[route][
                             <string>overrideReq.method?.toLowerCase()
@@ -69,6 +72,11 @@ export class Router {
                         (await readBody(req)) || "[]"
                     );
                     const overrideRes = ResponseBuilder(<Response>res);
+                    if(headers){
+                        headers.forEach(header => {
+                            res.setHeader(header.name, header.value);
+                        });
+                    }
                     try {
                         if (middlewares) {
                             for (let mid = 0; mid < middlewares.length; mid++) {

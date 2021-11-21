@@ -1,7 +1,9 @@
 import { Response } from "../types";
 
 export default function ResponseBuilder(res: Response): Response {
-    res.send = (message) => res.end(message);
+    res.send = (message) => {
+        res.end(message);
+    };
     res.json = (message) => {
         res.setHeader("Content-Type", "application/json");
         res.end(JSON.stringify(message));
