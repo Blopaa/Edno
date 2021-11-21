@@ -1,8 +1,8 @@
 import {
     ConfiguredRoute,
-    EndpointFunc,
+    EndpointFunc, HeaderDef,
     MiddlewareFunc,
-    Options,
+    Options
 } from "../types";
 import { ConfigRoutes } from "../configRoutes/ConfigRoutes";
 import { Loaders } from "../loaders";
@@ -30,26 +30,27 @@ export class Edno {
         // prettier-ignore
         const configuredRoutes: ConfiguredRoute[] = new ConfigRoutes().configRoutes();
         configuredRoutes.map((e) => {
-            this.methodFunction(e.method, e.path, ...e.functions);
+            this.methodFunction(e.method, e.path, e.headers, ...e.functions);
         });
     }
 
     private methodFunction(
         method: string,
         path: string,
+        headers: HeaderDef[],
         ...rest: Array<EndpointFunc | MiddlewareFunc>
     ) {
         if (rest.length === 1) {
-            this.router.registerRoutes(path, rest[0] as EndpointFunc, method);
+            this.router.registerRoutes(path, rest[0] as EndpointFunc, method, headers);
         } else {
-            const service = rest.pop() as EndpointFunc;
-            this.router.registerRoutes(path, service, method, rest);
+            const endpoint = rest.pop() as EndpointFunc;
+            this.router.registerRoutes(path, endpoint, method, headers, rest);
         }
     }
 
     public start(cb?: () => void): void {
         if(cb){
-            cb()
+            cb();
         }
         this.router.create(this.options.port);
     }
