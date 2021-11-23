@@ -1,6 +1,6 @@
 import {
     ConfiguredRoute,
-    EndpointFunc, HeaderDef,
+    EndpointFunc, HeaderDef, Methods,
     MiddlewareFunc,
     Options
 } from "../types";
@@ -29,13 +29,13 @@ export class Edno {
         await loaders.loadErrorHandler();
         // prettier-ignore
         const configuredRoutes: ConfiguredRoute[] = new ConfigRoutes().configRoutes();
-        configuredRoutes.map((e) => {
+        configuredRoutes.map((e: ConfiguredRoute) => {
             this.methodFunction(e.method, e.path, e.headers, ...e.functions);
         });
     }
 
     private methodFunction(
-        method: string,
+        method: Methods,
         path: string,
         headers: HeaderDef[],
         ...rest: Array<EndpointFunc | MiddlewareFunc>

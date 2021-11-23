@@ -39,7 +39,7 @@ export class ConfigRoutes {
             const lastPath = path[path.length - 1];
             if (lastPath === "/") path = path.substring(1);
             routes.push({
-                method: endpoint.method.toLowerCase(),
+                method: endpoint.method,
                 path,
                 functions: controllerMiddlewares.concat(
                     endpointMiddlewares,

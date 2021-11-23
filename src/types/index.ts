@@ -40,7 +40,7 @@ export enum Methods {
 }
 
 export interface ConfiguredRoute {
-    method: string;
+    method: Methods;
     path: string;
     functions: Array<EndpointFunc | MiddlewareFunc>;
     headers: HeaderDef[]

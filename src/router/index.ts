@@ -1,5 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from "http";
-import { EndpointFunc, HeaderDef, MiddlewareFunc, Request, Response } from "../types";
+import { EndpointFunc, HeaderDef, Methods, MiddlewareFunc, Request, Response } from "../types";
 import { parse } from "../regex/url-to-regex";
 import readBody from "../helpers/readBody";
 import ResponseBuilder from "../response/responseBuilder";
@@ -14,7 +14,7 @@ export class Router {
     public registerRoutes(
         path: string,
         cb: EndpointFunc,
-        method: string,
+        method: Methods,
         headers: HeaderDef[],
         middleware?: Array<MiddlewareFunc>
     ): void {
@@ -53,17 +53,17 @@ export class Router {
                 if (
                     new RegExp(parsedRoute).test(<string>overrideReq.url) &&
                     this._routeTable[route][
-                        <string>overrideReq.method?.toLowerCase()
+                        <string>overrideReq.method
                     ]
                 ) {
-                    const headers: HeaderDef[] = this._routeTable[route][`${req.method?.toLowerCase()}-headers`];
+                    const headers: HeaderDef[] = this._routeTable[route][`${req.method}-headers`];
                     const cb =
                         this._routeTable[route][
-                            <string>overrideReq.method?.toLowerCase()
+                            <string>overrideReq.method
                         ];
                     const middlewares: MiddlewareFunc[] =
                         this._routeTable[route][
-                            `${req.method?.toLowerCase()}-middleware`
+                            `${req.method}-middleware`
                         ];
                     const m = overrideReq.url?.match(new RegExp(parsedRoute));
 
