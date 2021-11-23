@@ -47,7 +47,7 @@ export class ConfigRoutes {
                         endpoint.propertyKey
                     ].bind(controller.target)
                 ),
-                headers: endpointHeaders
+                headers: endpointHeaders,
             });
         }
 

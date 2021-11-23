@@ -43,7 +43,7 @@ export interface ConfiguredRoute {
     method: Methods;
     path: string;
     functions: Array<EndpointFunc | MiddlewareFunc>;
-    headers: HeaderDef[]
+    headers: HeaderDef[];
 }
 
 export interface Injector {
@@ -60,7 +60,7 @@ export interface Injectable {
 export type unknownClass = new (...args: any[]) => unknown;
 
 export interface Response extends ServerResponse {
-    send: (message: string ) => void;
+    send: (message: string) => void;
     json: (message: { [key: string]: any }) => void;
     status: (status: number) => Omit<Response, "status">;
 }
@@ -77,8 +77,8 @@ export interface Options {
 }
 
 export interface RouteTableEndpoint {
-    cb: EndpointFunc
-    headers: HeaderDef[]
+    cb: EndpointFunc;
+    headers: HeaderDef[];
 }
 
 export interface IFile {
@@ -90,5 +90,11 @@ export interface HeaderDef {
     name: string;
     value: string;
     propertyKey: string;
-    target: string
+    target: string;
+}
+
+export interface MethodDef {
+    cb: EndpointFunc;
+    middleware?: MiddlewareFunc[];
+    headers?: HeaderDef[];
 }

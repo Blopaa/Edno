@@ -5,7 +5,9 @@ import injectorStore from "../stores/InjectorStore";
  *
  * @param injectable
  */
-export function Inject(injectable: (new () => unknown) | (new (...args: any[]) => unknown)): ParameterDecorator {
+export function Inject(
+    injectable: (new () => unknown) | (new (...args: any[]) => unknown)
+): ParameterDecorator {
     return (
         target: any,
         propertyKey: string | symbol,
