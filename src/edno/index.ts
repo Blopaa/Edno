@@ -1,8 +1,10 @@
 import {
     ConfiguredRoute,
-    EndpointFunc, HeaderDef, Methods,
+    EndpointFunc,
+    HeaderDef,
+    Methods,
     MiddlewareFunc,
-    Options
+    Options,
 } from "../types";
 import { ConfigRoutes } from "../configRoutes/ConfigRoutes";
 import { Loaders } from "../loaders";
@@ -41,7 +43,12 @@ export class Edno {
         ...rest: Array<EndpointFunc | MiddlewareFunc>
     ) {
         if (rest.length === 1) {
-            this.router.registerRoutes(path, rest[0] as EndpointFunc, method, headers);
+            this.router.registerRoutes(
+                path,
+                rest[0] as EndpointFunc,
+                method,
+                headers
+            );
         } else {
             const endpoint = rest.pop() as EndpointFunc;
             this.router.registerRoutes(path, endpoint, method, headers, rest);
@@ -49,7 +56,7 @@ export class Edno {
     }
 
     public start(cb?: () => void): void {
-        if(cb){
+        if (cb) {
             cb();
         }
         this.router.create(this.options.port);

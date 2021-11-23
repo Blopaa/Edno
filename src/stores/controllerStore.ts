@@ -41,8 +41,8 @@ class ControllerStore implements Iterable<EndpointDef> {
      */
     public getHeaders(key: string): HeaderDef[] {
         const headers = new Array<HeaderDef>();
-        for(const header of this.headers.entries()){
-            if(header[0] === key){
+        for (const header of this.headers.entries()) {
+            if (header[0] === key) {
                 headers.push(header[1]);
             }
         }
@@ -53,12 +53,9 @@ class ControllerStore implements Iterable<EndpointDef> {
     /**
      * Stores controllers
      * @param {string} path - the path handled by the controller
-     * @param {unknownClass} Controller - the classroom decorated by the decorator
+     * @param {unknownClass} Controller - the class decorated by the decorator
      */
-    public registerRoutes(
-        path: string,
-        Controller: unknownClass
-    ) {
+    public registerRoutes(path: string, Controller: unknownClass) {
         const injectors = injectorStore.getInjector(Controller.name);
         const sortedInjectors = injectors
             .sort((a, b) => a.index - b.index)
