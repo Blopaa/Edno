@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "prettier": "prettier -w src/",
-    "lint": "eslint src/ --fix"
+    "lint": "eslint src/ --fix",
+    "test": "jest --config jest.config.ts"
   },
   "keywords": [
     "app",
@@ -35,14 +36,16 @@
     "type": "git",
     "url": "git+https://github.com/Blopaa/Edno.git"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/jest": "^27.0.3",
     "@types/node": "^16.11.9",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.11.0",
+    "jest": "^27.3.1",
     "prettier": "^2.4.1",
+    "ts-jest": "^27.0.7",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.2"
   }
