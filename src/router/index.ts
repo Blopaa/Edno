@@ -8,7 +8,7 @@ import {
     Request,
     Response,
 } from "../types";
-import { parse } from "../regex/url-to-regex";
+import { parse } from "../regex/urlToRegex";
 import readBody from "../helpers/readBody";
 import ResponseBuilder from "../response/responseBuilder";
 import processMiddleware from "../helpers/processMiddleware";
