@@ -1,15 +1,11 @@
 import controllerStore from "../stores/controllerStore";
 
-export default function Header(
-    headerName: string,
-    headerValue: string
-): MethodDecorator {
+export default function HttpCode(status: number): MethodDecorator {
     return ((target: object, propertyKey: string | symbol) => {
-        controllerStore.registerHeader({
+        controllerStore.registerStatus({
+            status,
             target: target.constructor.name,
             propertyKey: propertyKey.toString(),
-            name: headerName,
-            value: headerValue,
         });
     }) as MethodDecorator;
 }

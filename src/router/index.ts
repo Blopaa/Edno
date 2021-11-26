@@ -1,7 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from "http";
 import {
-    EndpointFunc,
-    HeaderDef,
     MethodDef,
     Methods,
     MiddlewareFunc,
@@ -23,26 +21,18 @@ export class Router {
     /**
      * records all routes along with all the information needed to handle them
      * @param {string} path - the endpoint path
-     * @param {EndpointFunc} cb - the endpoint
+     * @param {MethodDef} endpoint - current endpoint data
      * @param {Methods} method - the endpoint HTTP verb
-     * @param {Array<HeaderDef>>} headers - the headers to be returned by the endpoint
-     * @param {Array<MiddlewareFunc>} middleware - the endpoint middlewares
      */
     public registerRoutes(
         path: string,
-        cb: EndpointFunc,
-        method: Methods,
-        headers: HeaderDef[],
-        middleware?: Array<MiddlewareFunc>
+        endpoint: MethodDef,
+        method: Methods
     ): void {
         if (!this._routeTable[path]) {
             this._routeTable[path] = {} as Record<Methods, MethodDef>;
         }
-        this._routeTable[path][method] = {
-            cb,
-            headers,
-            middleware,
-        };
+        this._routeTable[path][method] = endpoint;
     }
 
     /**
@@ -83,7 +73,10 @@ export class Router {
                     overrideReq.body = JSON.parse(
                         (await readBody(req)) || "[]"
                     );
-                    const overrideRes = ResponseBuilder(<Response>res);
+                    const overrideRes = ResponseBuilder(
+                        <Response>res,
+                        currentEndpointData.status
+                    );
                     if (currentEndpointData.headers) {
                         currentEndpointData.headers.forEach((header) => {
                             res.setHeader(header.name, header.value);

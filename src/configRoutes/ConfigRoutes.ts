@@ -1,6 +1,7 @@
 import controllerStore from "../stores/controllerStore";
 import middlewareStore from "../stores/MiddlewareStore";
 import { ConfiguredRoute } from "../types";
+import { HttpStatus } from "../types/HttpStatus";
 
 export class ConfigRoutes {
     /**
@@ -17,9 +18,9 @@ export class ConfigRoutes {
                 middlewareStore.getMiddlewares(
                     `${endpoint.controller}-${endpoint.propertyKey}`
                 ) || [];
-            const endpointHeaders = controllerStore.getHeaders(
-                `${endpoint.controller}-${endpoint.propertyKey}`
-            );
+            const key = `${endpoint.controller}-${endpoint.propertyKey}`;
+            const endpointHeaders = controllerStore.getHeaders(key);
+            const endpointStatus = controllerStore.getStatus(key);
             const controller = controllerStore.getController(
                 endpoint.controller
             );
@@ -48,6 +49,7 @@ export class ConfigRoutes {
                     ].bind(controller.target)
                 ),
                 headers: endpointHeaders,
+                status: endpointStatus?.status || HttpStatus.OK,
             });
         }
 

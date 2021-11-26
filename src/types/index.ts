@@ -44,6 +44,7 @@ export interface ConfiguredRoute {
     path: string;
     functions: Array<EndpointFunc | MiddlewareFunc>;
     headers: HeaderDef[];
+    status: number;
 }
 
 export interface Injector {
@@ -76,11 +77,6 @@ export interface Options {
     };
 }
 
-export interface RouteTableEndpoint {
-    cb: EndpointFunc;
-    headers: HeaderDef[];
-}
-
 export interface IFile {
     name: string;
     ext: string;
@@ -94,7 +90,14 @@ export interface HeaderDef {
 }
 
 export interface MethodDef {
+    status: number;
     cb: EndpointFunc;
     middleware?: MiddlewareFunc[];
     headers?: HeaderDef[];
+}
+
+export interface StatusDef {
+    status: number;
+    propertyKey: string;
+    target: string;
 }

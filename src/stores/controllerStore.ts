@@ -1,10 +1,26 @@
-import { ControllerDef, EndpointDef, HeaderDef, unknownClass } from "../types";
+import {
+    ControllerDef,
+    EndpointDef,
+    HeaderDef,
+    StatusDef,
+    unknownClass,
+} from "../types";
 import injectorStore from "./InjectorStore";
 
 class ControllerStore implements Iterable<EndpointDef> {
     private readonly _list = new Map<string, ControllerDef>();
     private readonly endpoints = new Map<string, EndpointDef>();
     private readonly headers = new Map<string, HeaderDef>();
+    private readonly status = new Map<string, StatusDef>();
+
+    /**
+     * Stores status.
+     * @param {number} status - the status to be returned by the endpoint
+     */
+    public registerStatus(status: StatusDef) {
+        const key = `${status.target}-${status.propertyKey}`;
+        this.status.set(key, status);
+    }
 
     /**
      * Stores endpoints.
@@ -62,6 +78,14 @@ class ControllerStore implements Iterable<EndpointDef> {
             .map((i) => injectorStore.getInjectable(i.toInject));
         const target = new Controller(...sortedInjectors);
         this._list.set(Controller.name, { path, target });
+    }
+
+    /**
+     * returns a status for its key
+     * @param {string} key - the key to find the ednpoint status
+     */
+    public getStatus(key: string): StatusDef | undefined {
+        return this.status.get(key);
     }
 
     /**

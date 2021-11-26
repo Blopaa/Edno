@@ -1,6 +1,16 @@
 import { Response } from "../types";
+import { HttpStatus } from "../types/HttpStatus";
 
-export default function ResponseBuilder(res: Response): Response {
+/**
+ * Build IncomingMessage from node
+ * @param {Response} res - response to build
+ * @param {number} status - status to return, default 200
+ */
+export default function ResponseBuilder(
+    res: Response,
+    status: number = HttpStatus.OK
+): Response {
+    res.statusCode = status;
     res.send = (message) => {
         res.end(message);
     };
