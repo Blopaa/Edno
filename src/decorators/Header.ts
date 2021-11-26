@@ -4,7 +4,7 @@ export default function Header(
     headerName: string,
     headerValue: string
 ): MethodDecorator {
-    return ((target: Object, propertyKey: string | symbol) => {
+    return ((target: object, propertyKey: string | symbol) => {
         controllerStore.registerHeader({
             target: target.constructor.name,
             propertyKey: propertyKey.toString(),
