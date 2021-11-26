@@ -32,7 +32,13 @@ export class Edno {
         // prettier-ignore
         const configuredRoutes: ConfiguredRoute[] = new ConfigRoutes().configRoutes();
         configuredRoutes.map((e: ConfiguredRoute) => {
-            this.methodFunction(e.method, e.path, e.headers, ...e.functions);
+            this.methodFunction(
+                e.method,
+                e.path,
+                e.headers,
+                e.status,
+                ...e.functions
+            );
         });
     }
 
@@ -40,19 +46,20 @@ export class Edno {
         method: Methods,
         path: string,
         headers: HeaderDef[],
+        status: number,
         ...rest: Array<EndpointFunc | MiddlewareFunc>
     ) {
-        if (rest.length === 1) {
-            this.router.registerRoutes(
-                path,
-                rest[0] as EndpointFunc,
-                method,
-                headers
-            );
-        } else {
-            const endpoint = rest.pop() as EndpointFunc;
-            this.router.registerRoutes(path, endpoint, method, headers, rest);
-        }
+        const endpoint = rest.pop() as EndpointFunc;
+        this.router.registerRoutes(
+            path,
+            {
+                status,
+                cb: endpoint,
+                headers,
+                middleware: rest as MiddlewareFunc[],
+            },
+            method
+        );
     }
 
     public start(cb?: () => void): void {
