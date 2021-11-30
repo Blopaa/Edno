@@ -12,7 +12,7 @@ export type MiddlewareFunc = (
     next: (err?: unknown) => void
 ) => void;
 
-export type EndpointFunc = (req: Request, res: Response) => void;
+export type EndpointFunc = (...args: (string | object | undefined)[]) => void;
 
 export interface ControllerDef {
     path: string;
@@ -47,6 +47,7 @@ export interface ConfiguredRoute {
     functions: Array<EndpointFunc | MiddlewareFunc>;
     headers: HeaderDef[];
     status: HttpStatusCode;
+    key: string;
 }
 
 export interface Injector {
@@ -96,10 +97,26 @@ export interface MethodDef {
     cb: EndpointFunc;
     middleware?: MiddlewareFunc[];
     headers?: HeaderDef[];
+    key: string;
 }
 
 export interface StatusDef {
     status: HttpStatusCode;
     propertyKey: string;
     target: string;
+}
+
+export enum ParamTypes {
+    PARAM = "PARAM",
+    BODY = "BODY",
+    RESPONSE = "RESPONSE",
+}
+
+export interface ParamDef {
+    name: string;
+    type: ParamTypes;
+    index: number;
+    target: string;
+    propertyKey: string;
+    value: string | object | undefined;
 }

@@ -48,6 +48,7 @@ export class ConfigRoutes {
                 ),
                 headers: endpointHeaders,
                 status: endpointStatus?.status || HttpStatus.OK,
+                key,
             });
         }
 
