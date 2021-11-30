@@ -9,9 +9,7 @@ import {
 import { parse } from "../regex/urlToRegex";
 import readBody from "../helpers/readBody";
 import ResponseBuilder from "../response/responseBuilder";
-import processMiddleware from "../helpers/processMiddleware";
-import errorHandlerStore from "../stores/ErrorHandlerStore";
-import { HttpException } from "../utils/HttpException";
+import { handleEndpoint } from "../configRoutes/handleEndpoint";
 
 export class Router {
     private readonly _routeTable: Record<string, Record<Methods, MethodDef>> =
@@ -82,36 +80,11 @@ export class Router {
                             res.setHeader(header.name, header.value);
                         });
                     }
-                    try {
-                        if (currentEndpointData.middleware) {
-                            for (
-                                let mid = 0;
-                                mid < currentEndpointData.middleware.length;
-                                mid++
-                            ) {
-                                await processMiddleware(
-                                    currentEndpointData.middleware[mid],
-                                    overrideReq,
-                                    overrideRes
-                                );
-                            }
-                        }
-                        await currentEndpointData.cb(overrideReq, overrideRes);
-                    } catch (error: unknown) {
-                        const errorHandler = errorHandlerStore.getErrorHandler(
-                            (error as HttpException).constructor.name
-                        );
-                        if (!errorHandler) {
-                            overrideRes.json(error as HttpException);
-                            return;
-                        }
-                        const handler = errorHandler.handler(
-                            error as HttpException
-                        );
-                        overrideRes
-                            .status((error as HttpException).status)
-                            .json(handler as Record<string, any>);
-                    }
+                    await handleEndpoint(
+                        overrideReq,
+                        overrideRes,
+                        currentEndpointData
+                    );
                     match = true;
                     break;
                 }
