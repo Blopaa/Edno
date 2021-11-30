@@ -1,4 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
+import { HttpStatusCode } from "./HttpStatus";
 
 export interface Request extends IncomingMessage {
     params: Record<string, any>;
@@ -23,6 +24,7 @@ export interface EndpointDef {
     method: Methods;
     propertyKey: string;
     controller: string;
+    descriptor: EndpointFunc;
 }
 
 export interface ErrorHandlerDef {
@@ -44,7 +46,7 @@ export interface ConfiguredRoute {
     path: string;
     functions: Array<EndpointFunc | MiddlewareFunc>;
     headers: HeaderDef[];
-    status: number;
+    status: HttpStatusCode;
 }
 
 export interface Injector {
@@ -90,14 +92,14 @@ export interface HeaderDef {
 }
 
 export interface MethodDef {
-    status: number;
+    status: HttpStatusCode;
     cb: EndpointFunc;
     middleware?: MiddlewareFunc[];
     headers?: HeaderDef[];
 }
 
 export interface StatusDef {
-    status: number;
+    status: HttpStatusCode;
     propertyKey: string;
     target: string;
 }
