@@ -13,9 +13,9 @@ export class ConfigRoutes {
         const routes: ConfiguredRoute[] = [];
         for (const endpoint of controllerStore) {
             const controllerMiddlewares =
-                middlewareStore.getMiddlewares(endpoint.controller) || [];
+                middlewareStore.getLinkedMiddlewares(endpoint.controller) || [];
             const endpointMiddlewares =
-                middlewareStore.getMiddlewares(
+                middlewareStore.getLinkedMiddlewares(
                     `${endpoint.controller}-${endpoint.propertyKey}`
                 ) || [];
             const key = `${endpoint.controller}-${endpoint.propertyKey}`;
@@ -34,8 +34,8 @@ export class ConfigRoutes {
                     ? endpoint.path.slice(1)
                     : !endpoint.path.startsWith("/") &&
                       !controller.path.endsWith("/")
-                        ? "/".concat(endpoint.path)
-                        : endpoint.path
+                    ? "/".concat(endpoint.path)
+                    : endpoint.path
             }`;
             const lastPath = path[path.length - 1];
             if (lastPath === "/") path = path.substring(1);
@@ -48,6 +48,7 @@ export class ConfigRoutes {
                 ),
                 headers: endpointHeaders,
                 status: endpointStatus?.status || HttpStatus.OK,
+                key,
             });
         }
 

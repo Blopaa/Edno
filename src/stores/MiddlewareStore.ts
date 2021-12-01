@@ -1,13 +1,13 @@
 import { MiddlewareFunc } from "../types";
 
 class MiddlewareStore {
-    private readonly _middlewares = new Map<String, MiddlewareFunc[]>();
+    private readonly linkedMiddlewares = new Map<string, MiddlewareFunc[]>();
 
     public registerControllerMiddleware(
         middlewares: MiddlewareFunc[],
         Middleware: new (...args: unknown[]) => unknown
     ) {
-        this._middlewares.set(Middleware.name, middlewares);
+        this.linkedMiddlewares.set(Middleware.name, middlewares);
     }
 
     public registerEndpointMiddleware(
@@ -15,11 +15,11 @@ class MiddlewareStore {
         propertyKey: string,
         controller: string
     ) {
-        this._middlewares.set(`${controller}-${propertyKey}`, middlewares);
+        this.linkedMiddlewares.set(`${controller}-${propertyKey}`, middlewares);
     }
 
-    public getMiddlewares(name: string): MiddlewareFunc[] | undefined {
-        return this._middlewares.get(name);
+    public getLinkedMiddlewares(name: string): MiddlewareFunc[] | undefined {
+        return this.linkedMiddlewares.get(name);
     }
 }
 

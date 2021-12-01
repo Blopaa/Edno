@@ -37,6 +37,7 @@ export class Edno {
                 e.path,
                 e.headers,
                 e.status,
+                e.key,
                 ...e.functions
             );
         });
@@ -47,6 +48,7 @@ export class Edno {
         path: string,
         headers: HeaderDef[],
         status: number,
+        key: string,
         ...rest: Array<EndpointFunc | MiddlewareFunc>
     ) {
         const endpoint = rest.pop() as EndpointFunc;
@@ -57,6 +59,7 @@ export class Edno {
                 cb: endpoint,
                 headers,
                 middleware: rest as MiddlewareFunc[],
+                key,
             },
             method
         );
