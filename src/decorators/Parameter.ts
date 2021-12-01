@@ -1,14 +1,14 @@
 import parameterStore from "../stores/ParameterStore";
 import { ParamTypes } from "../types";
 
-export function Param(details: string): ParameterDecorator {
+export function Param(details?: string): ParameterDecorator {
     return (
         target: object,
         propertyKey: string | symbol,
         parameterIndex: number
     ) => {
         parameterStore.registerParameter({
-            name: details,
+            name: details || "",
             value: undefined,
             type: ParamTypes.PARAM,
             index: parameterIndex,
@@ -35,14 +35,14 @@ export function Res(): ParameterDecorator {
     };
 }
 
-export function Body(details: string): ParameterDecorator {
+export function Body(details?: string): ParameterDecorator {
     return (
         target: object,
         propertyKey: string | symbol,
         parameterIndex: number
     ) => {
         parameterStore.registerParameter({
-            name: details,
+            name: details || "",
             value: undefined,
             type: ParamTypes.BODY,
             index: parameterIndex,
