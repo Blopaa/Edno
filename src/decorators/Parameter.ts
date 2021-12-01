@@ -51,3 +51,20 @@ export function Body(details: string): ParameterDecorator {
         });
     };
 }
+
+export function Next(): ParameterDecorator {
+    return (
+        target: object,
+        propertyKey: string | symbol,
+        parameterIndex: number
+    ) => {
+        parameterStore.registerParameter({
+            name: "",
+            value: undefined,
+            type: ParamTypes.NEXT,
+            index: parameterIndex,
+            propertyKey: propertyKey.toString(),
+            target: target.constructor.name,
+        });
+    };
+}

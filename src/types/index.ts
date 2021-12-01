@@ -6,13 +6,9 @@ export interface Request extends IncomingMessage {
     body: Record<string, any>;
 }
 
-export type MiddlewareFunc = (
-    req: Request,
-    res: Response,
-    next: (err?: unknown) => void
-) => void;
+export type MiddlewareFunc = (...args: any[]) => void;
 
-export type EndpointFunc = (...args: (string | object | undefined)[]) => void;
+export type EndpointFunc = (...args: any[]) => void;
 
 export interface ControllerDef {
     path: string;
@@ -110,6 +106,7 @@ export enum ParamTypes {
     PARAM = "PARAM",
     BODY = "BODY",
     RESPONSE = "RESPONSE",
+    NEXT = "NEXT",
 }
 
 export interface ParamDef {
@@ -118,5 +115,5 @@ export interface ParamDef {
     index: number;
     target: string;
     propertyKey: string;
-    value: string | object | undefined;
+    value: any;
 }
