@@ -4,6 +4,10 @@ class InjectorStore {
     private injectables = new Map<string, Injectable>();
     private injectors = new Array<Injector>();
 
+    /**
+     * stores injectables
+     * @param  {Injectable} injectable - Injectable to store
+     */
     public registerInjectable(injectable: Injectable) {
         this.injectables.set(
             `${injectable.controller}`,
@@ -11,15 +15,29 @@ class InjectorStore {
         );
     }
 
-    public getInjectable(injectable: string): any {
+    /**
+     * return an Injectable from given key
+     * @param {string} injectable - Injectable key
+     * @return {Injectable | undefined} - found Injectable or undefined
+     */
+    public getInjectable(injectable: string): Injectable | undefined {
         return this.injectables.get(injectable);
     }
 
+    /**
+     * stores Injectors
+     * @param {Injector} injector - Injector to store
+     */
     public registerInjector(injector: Injector) {
         this.injectors.push(injector);
     }
 
-    public getInjector(injector: string) {
+    /**
+     * return an Injector from given key
+     * @param {string} injector - injector key
+     * @return {Array<Injector>} - found injectors
+     */
+    public getInjector(injector: string): Injector[] {
         return this.injectors.filter((e) => e.target.name === injector);
     }
 }

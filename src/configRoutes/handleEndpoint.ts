@@ -5,6 +5,12 @@ import { MethodDef, ParamDef, Request, Response } from "../types";
 import parameterStore from "../stores/ParameterStore";
 import { parameterReducer } from "./parameterReducer";
 
+/**
+ * handles parameter injection into middleware and endpoints
+ * @param {Request} req - endpoint request
+ * @param {Response} res - endpoint response
+ * @param {MethodDef} currentEndpointData - the information needed to set up the endpoint
+ */
 export async function handleEndpoint(
     req: Request,
     res: Response,

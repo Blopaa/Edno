@@ -1,3 +1,8 @@
+/**
+ * converts the url into a regex and returns it
+ * @param {string} url - request url
+ * @return {string} str - request url regex
+ */
 export function parse(url: string): string {
     let str = "";
 

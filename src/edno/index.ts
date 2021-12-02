@@ -1,14 +1,14 @@
 import {
     ConfiguredRoute,
-    EndpointFunc,
+    RouteFunction,
     HeaderDef,
     Methods,
-    MiddlewareFunc,
     Options,
 } from "../types";
 import { ConfigRoutes } from "../configRoutes/ConfigRoutes";
 import { Loaders } from "../loaders";
 import { Router } from "../router";
+import { HttpStatusCode } from "../types/HttpStatus";
 
 export class Edno {
     private readonly router = new Router();
@@ -19,9 +19,13 @@ export class Edno {
         })();
     }
 
+    /**
+     * load the routers and configure the routes, and then pass them to the router with all the necessary information.
+     * @private
+     */
     private async initialise() {
         if (this.options.middlewares) {
-            this.options.middlewares.forEach((middleware: MiddlewareFunc) => {
+            this.options.middlewares.forEach((middleware: RouteFunction) => {
                 this.router.beforeMiddleware.push(middleware);
             });
         }
@@ -43,22 +47,32 @@ export class Edno {
         });
     }
 
+    /**
+     * sends route data to the router to set up routes
+     * @param {Methods} method - the HTTP verb of the path
+     * @param {string} path - the route path
+     * @param {Array<HeaderDef>} headers - the route headers
+     * @param {HttpStatusCode} status - the route status
+     * @param {string} key - the route key to find it on stores
+     * @param {Array<RouteFunction>} rest - route functions, middlewares and endpoints
+     * @private
+     */
     private methodFunction(
         method: Methods,
         path: string,
         headers: HeaderDef[],
-        status: number,
+        status: HttpStatusCode,
         key: string,
-        ...rest: Array<EndpointFunc | MiddlewareFunc>
+        ...rest: Array<RouteFunction>
     ) {
-        const endpoint = rest.pop() as EndpointFunc;
+        const endpoint = rest.pop() as RouteFunction;
         this.router.registerRoutes(
             path,
             {
                 status,
                 cb: endpoint,
                 headers,
-                middleware: rest as MiddlewareFunc[],
+                middleware: rest as RouteFunction[],
                 key,
             },
             method

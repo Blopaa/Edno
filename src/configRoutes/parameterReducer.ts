@@ -1,27 +1,33 @@
 import { ParamDef, ParamTypes, Request, Response } from "../types";
 
+/**
+ * handles the different types of parameters and their values
+ * @param {Request} req - endpoint request
+ * @param {Response} res - endpoint response
+ * @param {ParamDef} parameter - endpoint parameter data
+ */
 export function parameterReducer(
     req: Request,
     res: Response,
     parameter: ParamDef
 ): ParamDef {
     switch (parameter.type) {
-        case ParamTypes.BODY:
-            parameter.value = parameter.name
-                ? req.body[parameter.name]
-                : req.body;
-            break;
-        case ParamTypes.PARAM:
-            parameter.value = parameter.name
-                ? req.params[parameter.name]
-                : req.params;
-            break;
-        case ParamTypes.RESPONSE:
-            parameter.value = res;
-            break;
-        case ParamTypes.NEXT:
-            parameter.value = false;
-            break;
+    case ParamTypes.BODY:
+        parameter.value = parameter.name
+            ? req.body[parameter.name]
+            : req.body;
+        break;
+    case ParamTypes.PARAM:
+        parameter.value = parameter.name
+            ? req.params[parameter.name]
+            : req.params;
+        break;
+    case ParamTypes.RESPONSE:
+        parameter.value = res;
+        break;
+    case ParamTypes.NEXT:
+        parameter.value = false;
+        break;
     }
     return parameter;
 }

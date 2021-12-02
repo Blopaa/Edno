@@ -3,7 +3,7 @@ import {
     EndpointDef,
     HeaderDef,
     StatusDef,
-    unknownClass,
+    unknownArgClass,
 } from "../types";
 import injectorStore from "./InjectorStore";
 
@@ -69,9 +69,9 @@ class ControllerStore implements Iterable<EndpointDef> {
     /**
      * Stores controllers
      * @param {string} path - the path handled by the controller
-     * @param {unknownClass} Controller - the class decorated by the decorator
+     * @param {unknownArgClass} Controller - the class decorated by the decorator
      */
-    public registerRoutes(path: string, Controller: unknownClass) {
+    public registerRoutes(path: string, Controller: unknownArgClass) {
         const injectors = injectorStore.getInjector(Controller.name);
         const sortedInjectors = injectors
             .sort((a, b) => a.index - b.index)

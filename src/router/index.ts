@@ -1,11 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from "http";
-import {
-    MethodDef,
-    Methods,
-    MiddlewareFunc,
-    Request,
-    Response,
-} from "../types";
+import { MethodDef, Methods, RouteFunction, Request, Response } from "../types";
 import { parse } from "../regex/urlToRegex";
 import readBody from "../helpers/readBody";
 import ResponseBuilder from "../response/responseBuilder";
@@ -14,7 +8,7 @@ import { handleEndpoint } from "../configRoutes/handleEndpoint";
 export class Router {
     private readonly _routeTable: Record<string, Record<Methods, MethodDef>> =
         {};
-    private readonly _beforeMiddleware: Array<MiddlewareFunc> = [];
+    private readonly _beforeMiddleware: Array<RouteFunction> = [];
 
     /**
      * records all routes along with all the information needed to handle them
@@ -96,7 +90,7 @@ export class Router {
         }).listen(port);
     }
 
-    get beforeMiddleware(): Array<MiddlewareFunc> {
+    get beforeMiddleware(): Array<RouteFunction> {
         return this._beforeMiddleware;
     }
 }
