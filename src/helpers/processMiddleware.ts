@@ -1,9 +1,15 @@
-import { MiddlewareFunc, ParamDef, Request, Response } from "../types";
+import { RouteFunction, ParamDef, Request, Response } from "../types";
 import parameterStore from "../stores/ParameterStore";
 import { parameterReducer } from "../configRoutes/parameterReducer";
 
+/**
+ * handles the middlewares of the routes, injecting the values of its parameters
+ * @param {RouteFunction} middleware
+ * @param {Request} req
+ * @param {Response} res
+ */
 export default function processMiddleware(
-    middleware: MiddlewareFunc,
+    middleware: RouteFunction,
     req: Request,
     res: Response
 ): Promise<unknown> {
@@ -26,8 +32,8 @@ export default function processMiddleware(
                     p.value
                         ? p.value
                         : (p.value = () => {
-                              resolve(true);
-                          })
+                            resolve(true);
+                        })
                 )
             );
         });

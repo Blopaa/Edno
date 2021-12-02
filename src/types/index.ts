@@ -6,9 +6,7 @@ export interface Request extends IncomingMessage {
     body: Record<string, any>;
 }
 
-export type MiddlewareFunc = (...args: any[]) => void;
-
-export type EndpointFunc = (...args: any[]) => void;
+export type RouteFunction = (...args: any[]) => void;
 
 export interface ControllerDef {
     path: string;
@@ -20,7 +18,7 @@ export interface EndpointDef {
     method: Methods;
     propertyKey: string;
     controller: string;
-    descriptor: EndpointFunc;
+    descriptor: RouteFunction;
 }
 
 export interface ErrorHandlerDef {
@@ -40,7 +38,7 @@ export enum Methods {
 export interface ConfiguredRoute {
     method: Methods;
     path: string;
-    functions: Array<EndpointFunc | MiddlewareFunc>;
+    functions: Array<RouteFunction>;
     headers: HeaderDef[];
     status: HttpStatusCode;
     key: string;
@@ -57,7 +55,8 @@ export interface Injectable {
     target: new () => unknown;
 }
 
-export type unknownClass = new (...args: any[]) => unknown;
+export type unknownArgClass = new (...args: any[]) => unknown;
+export type unknownClass = new () => unknown;
 
 export interface Response extends ServerResponse {
     send: (message: string) => void;
@@ -68,7 +67,7 @@ export interface Response extends ServerResponse {
 export interface Options {
     port: number;
     root: string;
-    middlewares?: MiddlewareFunc[];
+    middlewares?: RouteFunction[];
     paths?: {
         exception?: string;
         controller?: string;
@@ -90,8 +89,8 @@ export interface HeaderDef {
 
 export interface MethodDef {
     status: HttpStatusCode;
-    cb: EndpointFunc;
-    middleware?: MiddlewareFunc[];
+    cb: RouteFunction;
+    middleware?: RouteFunction[];
     headers?: HeaderDef[];
     key: string;
 }

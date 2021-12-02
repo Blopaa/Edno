@@ -1,4 +1,4 @@
-import { MiddlewareFunc } from "../types";
+import { RouteFunction } from "../types";
 import middlewareStore from "../stores/MiddlewareStore";
 
 /**
@@ -6,7 +6,7 @@ import middlewareStore from "../stores/MiddlewareStore";
  * @param middlewares
  */
 export function ControllerMiddleware(
-    middlewares: MiddlewareFunc[]
+    middlewares: RouteFunction[]
 ): ClassDecorator {
     return ((middleware: new () => unknown) => {
         middlewareStore.registerControllerMiddleware(middlewares, middleware);
@@ -17,7 +17,7 @@ export function ControllerMiddleware(
  * decorator to add middlewares just to an endpoint
  * @param middlewares
  */
-export function Middleware(middlewares: MiddlewareFunc[]): MethodDecorator {
+export function Middleware(middlewares: RouteFunction[]): MethodDecorator {
     return ((target: any, propertyKey: string | symbol) => {
         middlewareStore.registerEndpointMiddleware(
             middlewares,

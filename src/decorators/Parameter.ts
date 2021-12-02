@@ -1,6 +1,10 @@
 import parameterStore from "../stores/ParameterStore";
 import { ParamTypes } from "../types";
 
+/**
+ * sets a value of the request parameters
+ * @param {string} details
+ */
 export function Param(details?: string): ParameterDecorator {
     return (
         target: object,
@@ -18,6 +22,9 @@ export function Param(details?: string): ParameterDecorator {
     };
 }
 
+/**
+ * sets a value to the server response
+ */
 export function Res(): ParameterDecorator {
     return (
         target: object,
@@ -35,6 +42,10 @@ export function Res(): ParameterDecorator {
     };
 }
 
+/**
+ * sets a value of the request body
+ * @param {string} details
+ */
 export function Body(details?: string): ParameterDecorator {
     return (
         target: object,
@@ -52,6 +63,9 @@ export function Body(details?: string): ParameterDecorator {
     };
 }
 
+/**
+ * sets a value of the middleware next function
+ */
 export function Next(): ParameterDecorator {
     return (
         target: object,

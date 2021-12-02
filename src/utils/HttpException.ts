@@ -4,7 +4,7 @@ export class HttpException extends Error {
         private readonly _response: string | Record<string, any>
     ) {
         super();
-        Object.setPrototypeOf(this, new.target.prototype);
+        Object.setPrototypeOf(this, new.target.prototype); // prevents the name of the classes extending it from being Error
         this.buildMessage();
     }
 
@@ -16,6 +16,10 @@ export class HttpException extends Error {
         return this._response;
     }
 
+    /**
+     * builds the Error message
+     * @private
+     */
     private buildMessage() {
         if (typeof this._response == "string") {
             this.message = this._response;
