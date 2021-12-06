@@ -28,6 +28,10 @@ export function parameterReducer(
     case ParamTypes.NEXT:
         parameter.value = false;
         break;
+    case ParamTypes.HEADER:
+        parameter.value = parameter.name
+            ? req.headers[parameter.name]
+            : req.headers;
     }
     return parameter;
 }

@@ -106,6 +106,7 @@ export enum ParamTypes {
     BODY = "BODY",
     RESPONSE = "RESPONSE",
     NEXT = "NEXT",
+    HEADER = "HEADER",
 }
 
 export interface ParamDef {

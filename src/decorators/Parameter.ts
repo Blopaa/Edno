@@ -82,3 +82,20 @@ export function Next(): ParameterDecorator {
         });
     };
 }
+
+export function Headers(details?: string): ParameterDecorator {
+    return (
+        target: object,
+        propertyKey: string | symbol,
+        parameterIndex: number
+    ) => {
+        parameterStore.registerParameter({
+            name: details || "",
+            value: undefined,
+            type: ParamTypes.HEADER,
+            index: parameterIndex,
+            propertyKey: propertyKey.toString(),
+            target: target.constructor.name,
+        });
+    };
+}
