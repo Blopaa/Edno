@@ -44,7 +44,9 @@ export class ConfigRoutes {
                 path,
                 functions: controllerMiddlewares.concat(
                     endpointMiddlewares,
-                    endpoint.descriptor
+                    (controller.target as Record<string, () => unknown>)[
+                        endpoint.propertyKey
+                    ].bind(controller.target)
                 ),
                 headers: endpointHeaders,
                 status: endpointStatus?.status || HttpStatus.OK,
