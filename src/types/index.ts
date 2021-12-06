@@ -52,7 +52,7 @@ export interface Injector {
 
 export interface Injectable {
     controller: string;
-    target: new () => unknown;
+    target: unknownArgClass | unknownClass;
 }
 
 export type unknownArgClass = new (...args: any[]) => unknown;
