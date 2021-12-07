@@ -4,7 +4,7 @@
  * @return {string} str - request url regex
  */
 export function parse(url: string): string {
-    let str = "";
+    let str = "^";
 
     for (let i = 0; i < url.length; i++) {
         const c: string = url.charAt(i);
@@ -24,5 +24,6 @@ export function parse(url: string): string {
             str += c;
         }
     }
+    str += "$";
     return str;
 }
