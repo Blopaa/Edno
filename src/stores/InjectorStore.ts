@@ -11,8 +11,8 @@ class InjectorStore {
     public registerInjectable(injectable: Injectable) {
         const injectors = this.getInjector(injectable.controller);
         const sortedInjectors = injectors
-          .sort((a, b) => a.index - b.index)
-          .map((i) => injectorStore.getInjectable(i.toInject));
+            .sort((a, b) => a.index - b.index)
+            .map((i) => injectorStore.getInjectable(i.toInject));
         this.injectables.set(
             `${injectable.controller}`,
             new injectable.target(...sortedInjectors) as Injectable

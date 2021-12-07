@@ -20,7 +20,7 @@ export default function ResponseBuilder(
     };
     res.status = (status) => {
         res.statusCode = status;
-        return <Omit<Response, "status">>ResponseBuilder(res);
+        return <Omit<Response, "status">>res;
     };
 
     return res;
