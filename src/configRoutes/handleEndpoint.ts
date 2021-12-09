@@ -30,9 +30,7 @@ export async function handleEndpoint(
         const parameters = parameterStore
             .getParameters(currentEndpointData.key)
             ?.sort((a, b) => a.index - b.index)
-            .map((parameter) =>
-                parameterReducer(req, res, parameter)
-            ) as ParamDef[];
+            .map((parameter) => parameterReducer(req, parameter)) as ParamDef[];
         res.json(
             (await currentEndpointData.cb(
                 ...parameters.map((p) => p.value)

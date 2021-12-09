@@ -25,7 +25,7 @@ export default function processMiddleware(
     if (parameters) {
         parameters = parameters
             .sort((a, b) => a.index - b.index)
-            .map((parameter) => parameterReducer(req, res, parameter));
+            .map((parameter) => parameterReducer(req, parameter));
         return new Promise((resolve) => {
             middleware(
                 ...parameters.map((p) =>
