@@ -30,10 +30,12 @@ export async function handleEndpoint(
         const parameters = parameterStore
             .getParameters(currentEndpointData.key)
             ?.sort((a, b) => a.index - b.index)
-            .map((parameter) =>
-                parameterReducer(req, res, parameter)
-            ) as ParamDef[];
-        await currentEndpointData.cb(...parameters.map((p) => p.value));
+            .map((parameter) => parameterReducer(req, parameter)) as ParamDef[];
+        res.json(
+            (await currentEndpointData.cb(
+                ...parameters.map((p) => p.value)
+            )) as Record<string, any>
+        );
     } catch (error: unknown) {
         const errorHandler = errorHandlerStore.getErrorHandler(
             (error as HttpException).constructor.name

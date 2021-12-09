@@ -89,7 +89,7 @@ export interface HeaderDef {
 
 export interface MethodDef {
     status: HttpStatusCode;
-    cb: RouteFunction;
+    cb: Endpoint;
     middleware?: RouteFunction[];
     headers?: HeaderDef[];
     key: string;
@@ -104,7 +104,6 @@ export interface StatusDef {
 export enum ParamTypes {
     PARAM = "PARAM",
     BODY = "BODY",
-    RESPONSE = "RESPONSE",
     NEXT = "NEXT",
     HEADER = "HEADER",
 }
@@ -117,3 +116,5 @@ export interface ParamDef {
     propertyKey: string;
     value: any;
 }
+
+export type Endpoint = (...args: any[]) => unknown;
