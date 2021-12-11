@@ -49,40 +49,50 @@ export class Router {
             const overrideReq: Request = <Request>req;
             const routes = Object.keys(this._routeTable);
             let match = false;
+            let routeMatch: string = "";
             for (let i = 0; i < routes.length; i++) {
                 const parsedRoute = parse(routes[i]);
                 if (
                     new RegExp(parsedRoute).test(<string>overrideReq.url) &&
-                    this._routeTable[routes[i]][<Methods>overrideReq.method]
+                    this._routeTable[routes[i]][<Methods>overrideReq.method] &&
+                    overrideReq.url ===  routes[i]
                 ) {
-                    const currentEndpointData: MethodDef =
-                        this._routeTable[routes[i]][<Methods>req.method];
-                    const matches = overrideReq.url?.match(
-                        new RegExp(parsedRoute)
-                    );
-
-                    overrideReq.params = matches?.groups as Record<string, any>;
-                    overrideReq.body = JSON.parse(
-                        (await readBody(req)) || "[]"
-                    );
-                    const overrideRes = ResponseBuilder(
-                        <Response>res,
-                        currentEndpointData.status
-                    );
-                    if (currentEndpointData.headers) {
-                        currentEndpointData.headers.forEach((header) => {
-                            res.setHeader(header.name, header.value);
-                        });
-                    }
-                    await handleEndpoint(
-                        overrideReq,
-                        overrideRes,
-                        currentEndpointData
-                    );
-                    match = true;
-                    break;
+                    routeMatch = routes[i];
+                    match = true
+                } else if(!routeMatch && new RegExp(parsedRoute).test(<string>overrideReq.url) &&
+                  this._routeTable[routes[i]][<Methods>overrideReq.method] ){
+                    routeMatch = routes[i];
+                    match = true
                 }
             }
+
+
+            const currentEndpointData: MethodDef =
+              this._routeTable[routeMatch][<Methods>req.method];
+            const matches = overrideReq.url?.match(
+              new RegExp(parse(routeMatch))
+            );
+
+            overrideReq.params = matches?.groups as Record<string, any>;
+            overrideReq.body = JSON.parse(
+              (await readBody(req)) || "[]"
+            );
+            const overrideRes = ResponseBuilder(
+              <Response>res,
+              currentEndpointData.status
+            );
+            if (currentEndpointData.headers) {
+                currentEndpointData.headers.forEach((header) => {
+                    res.setHeader(header.name, header.value);
+                });
+            }
+            await handleEndpoint(
+              overrideReq,
+              overrideRes,
+              currentEndpointData
+            );
+
+
             if (!match) {
                 res.statusCode = 404;
                 res.end("not found");

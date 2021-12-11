@@ -17,31 +17,41 @@ export async function handleEndpoint(
     currentEndpointData: MethodDef
 ): Promise<void> {
     try {
-        if (currentEndpointData.middleware) {
+        if (
+            currentEndpointData.middleware &&
+            currentEndpointData.middleware.length < 0
+        ) {
             // prettier-ignore
             for (let mid = 0; mid < currentEndpointData.middleware.length; mid++) {
-                await processMiddleware(
-                    currentEndpointData.middleware[mid],
-                    req,
-                    res
-                );
-            }
-        }
-        const parameters = parameterStore
-            .getParameters(currentEndpointData.key)
-            ?.sort((a, b) => a.index - b.index)
-            .map((parameter) => parameterReducer(req, parameter)) as ParamDef[];
-        res.json(
-            (await currentEndpointData.cb(
-                ...parameters.map((p) => p.value)
-            )) as Record<string, any>
+        await processMiddleware(
+          currentEndpointData.middleware[mid],
+          req,
+          res
         );
+      }
+        }
+        let parameters = parameterStore.getParameters(currentEndpointData.key);
+        if (parameters)
+            parameters = parameters
+                .sort((a, b) => a.index - b.index)
+                .map((parameter) =>
+                    parameterReducer(req, parameter)
+                ) as ParamDef[];
+        if (parameters) {
+            res.json(
+                (await currentEndpointData.cb(
+                    ...parameters.map((p) => p.value)
+                )) as Record<string, any>
+            );
+        } else {
+            res.json((await currentEndpointData.cb()) as Record<string, any>);
+        }
     } catch (error: unknown) {
         const errorHandler = errorHandlerStore.getErrorHandler(
             (error as HttpException).constructor.name
         );
         if (!errorHandler) {
-            res.json(error as HttpException);
+            res.json(error as Record<string, any>);
             return;
         }
         const handler = errorHandler.handler(error as HttpException);
