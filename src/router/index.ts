@@ -49,7 +49,7 @@ export class Router {
             const overrideReq: Request = <Request>req;
             const routes = Object.keys(this._routeTable);
             let match = false;
-            let routeMatch: string = "";
+            let routeMatch = "";
             for (let i = 0; i < routes.length; i++) {
                 const parsedRoute = parse(routes[i]);
                 if (
