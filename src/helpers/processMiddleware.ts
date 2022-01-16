@@ -32,8 +32,8 @@ export default function processMiddleware(
                     p.value
                         ? p.value
                         : (p.value = () => {
-                            resolve(true);
-                        })
+                              resolve(true);
+                          })
                 )
             );
         });

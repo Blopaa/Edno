@@ -23,12 +23,12 @@ export async function handleEndpoint(
         ) {
             // prettier-ignore
             for (let mid = 0; mid < currentEndpointData.middleware.length; mid++) {
-        await processMiddleware(
-          currentEndpointData.middleware[mid],
-          req,
-          res
-        );
-      }
+                await processMiddleware(
+                    currentEndpointData.middleware[mid],
+                    req,
+                    res
+                );
+            }
         }
         let parameters = parameterStore.getParameters(currentEndpointData.key);
         if (parameters)
@@ -40,7 +40,7 @@ export async function handleEndpoint(
         if (parameters) {
             res.json(
                 (await currentEndpointData.cb(
-                    ...parameters.map((p) => p.value)
+                    ...parameters.map((p) => (!p.value ? undefined : p.value))
                 )) as Record<string, any>
             );
         } else {

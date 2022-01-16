@@ -34,11 +34,12 @@ export class ConfigRoutes {
                     ? endpoint.path.slice(1)
                     : !endpoint.path.startsWith("/") &&
                       !controller.path.endsWith("/")
-                        ? "/".concat(endpoint.path)
-                        : endpoint.path
+                    ? "/".concat(endpoint.path)
+                    : endpoint.path
             }`;
             const lastPath = path[path.length - 1];
-            if (lastPath === "/") path = path.substring(1);
+            if (lastPath === "/" && endpoint.path.length > 1)
+                path = path.substring(1);
             routes.push({
                 method: endpoint.method,
                 path,
