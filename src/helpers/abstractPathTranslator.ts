@@ -11,12 +11,15 @@ import { readDirRecursive } from "./readDirRecursive";
 export function abstractPathTranslator(path: string): string[] {
     const files = new Array<string>();
     const splatted: string[] = path.split("**");
-    const base: string = splatted[0];
+    let base: string = splatted[0];
+    if(base.slice(-1) === "/") {
+        base = base.slice(0, -1);
+    }
     if (base.includes("*.")) {
-        const splattedBase = base.split(/[\\/]/);
+        const splattedBase = base.split("/");
         const extension = splattedBase.pop();
-        if (existsSync(splattedBase.join("\\"))) {
-            const list: string[] = readdirSync(splattedBase.join("\\"));
+        if (existsSync(splattedBase.join("/"))) {
+            const list: string[] = readdirSync(splattedBase.join("/"));
             list.forEach((f) => {
                 const splattedFile = f.split(".");
                 const file: IFile = {
@@ -24,7 +27,7 @@ export function abstractPathTranslator(path: string): string[] {
                     ext: splattedFile[1],
                 };
                 if (file.ext === extension?.split(".")[1]) {
-                    files.push(splattedBase.join("\\").concat("\\", f));
+                    files.push(splattedBase.join("/").concat("/", f));
                 }
             });
         }

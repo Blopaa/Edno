@@ -1,6 +1,6 @@
 {
   "name": "edno-ts",
-  "version": "4.0.7",
+  "version": "4.0.8",
   "description": "fast and simple node framework with poo and decorators made with pure node",
   "main": "src/edno",
   "scripts": {
